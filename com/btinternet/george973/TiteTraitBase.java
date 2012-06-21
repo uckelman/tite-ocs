@@ -141,7 +141,7 @@ public class TiteTraitBase extends TiteTrait implements EditablePiece {
     private JMenu attachMenu;
     
     public AttachKeyCommand( String name, GamePiece target, JMenu m ) {
-      super(name, null, target);
+      super(name, (javax.swing.KeyStroke)null, target);
       attachMenu = m;
     }
     
