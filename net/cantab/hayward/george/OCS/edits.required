@@ -1,0 +1,11 @@
+s/VASSAL.build.module.BasicCommandEncoder/net.cantab.hayward.george.OCS.BasicCommandEncoderOverride/g
+s/VASSAL.build.module.map.StackMetrics/net.cantab.hayward.george.OCS.StackMetricsOverride/g
+s/VASSAL.build.module.map.PieceMover/net.cantab.hayward.george.OCS.PieceMoverOverride/g
+s/VASSAL.build.module.Map/net.cantab.hayward.george.OCS.MapOverride/g
+s/VASSAL.build.widget.PieceSlot/net.cantab.hayward.george.OCS.PieceSlotOverride/g
+s/VASSAL.build.widget.CardSlot/net.cantab.hayward.george.OCS.CardSlotOverride/g
+s/VASSAL.build.module.map.boardPicker.board.mapgrid.HexGridNumbering/net.cantab.hayward.george.OCS.HexGridNumberingOverride/g
+s/VASSAL.build.module.map.boardPicker.board.RegionGrid/net.cantab.hayward.george.OCS.RegionGridOverride/g
+s/VASSAL.build.module.map.boardPicker.board.Region/net.cantab.hayward.george.OCS.RegionOverride/g
+wq
+

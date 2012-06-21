@@ -1,0 +1,3 @@
+#!/bin/bash
+mv buildFile buildFile.orig
+sed -f ../../../source/OCS.v1/net/cantab/hayward/george/OCS/edits.required buildFile.orig >buildFile
