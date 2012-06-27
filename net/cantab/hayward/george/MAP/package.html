@@ -1,0 +1,62 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>
+            <h2>Design Criteria</h2>
+            <p>
+                This extension to {@code VASSAL.build.module.Map} was done initially first to
+                allow players to change the part of the game map displayed from the active
+                playing area to a chart, turn sequence or other data and flip back again without
+                having to laborious scroll there and back; second to allow the scenario creator
+                to limit the portion of the map that could be scrolled over.
+            <P>
+                Since the charts etc to be leapt to are not necessarily inside the playable
+                portion of the game map, multiple portions need to be defined and since the
+                charts etc are not always upright the rotation of game map through 90,180 or
+                270 degrees needs to be possible. Given the utility of these "bookmarks" it
+                would be helpful if the player could define his own which would be private
+                to him.
+            <P>
+                For all the bookmarks the zoom and rotation at which to display the map would
+                be defined as well as the point to centre the view on. The bookmark for the
+                game map itself will be the last point jumped away from so it will always be
+                possible to leap to a chart and leap back again.
+            <P>
+                Since it will be required to move pieces between these different map portions
+                there is a need to display two parts simultaneously. The ways to do this are
+                to place a portion in a separate window or to split the view in half and display
+                different portions in each half. These choices are best left to the player,
+                so the extension needs to support both.
+            <P>
+                This means the same map or even the same portion of the map could be visible in more
+                than one place on the screen at once. Multiple displays of the map need to
+                be accommodated.
+            <P>
+                Some what are now separate maps are really adjuncts to the main map. Instead
+                of being accessible via a top level button their jump points should be
+                accessible from any main window view and vice versa.
+            <P>
+                It would be very desirable if when the game was saved that the windows and
+                views visible for each player were remembered and when a game loaded the
+                windows and views restored for each player
+            <p>
+            <h2>
+                Additional Design Criteria
+            </h2>
+            <p>
+                To improve the clarity of the code and also to help porting to Android systems
+                the front and back ends of the system will be rigorously separated so the controlling
+                logic will be in the back end whilst the front end will implement this as mouse clicks
+                or whatever as convenient. This will also allow several different flavours of interface
+                to exist for the user to choose between.
+        </div>
+    </body>
+</html>
