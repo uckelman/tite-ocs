@@ -41,9 +41,10 @@ class Mark extends MapTransform {
      * The central point which is held in Map coordinates.
      */
     protected Point centre;
+
     /**
      * This rectangle in map coordinates represents the area the player can view
-     * and scroll over after going to this bookmark. This may be null if there 
+     * and scroll over after going to this bookmark. This may be null if there
      * is no restriction.
      */
     Rectangle scrollingLimits;
@@ -51,7 +52,7 @@ class Mark extends MapTransform {
     /**
      * Create a new mark given the required info
      */
-    Mark(NewMap aMap, Point centre, double zoom, int orient, Rectangle limits) {
+    public Mark(NewMap aMap, Point centre, double zoom, int orient, Rectangle limits) {
         super(aMap, zoom, orient);
         this.centre = new Point(centre);
         scrollingLimits = limits == null ? null : new Rectangle(limits);
@@ -62,20 +63,38 @@ class Mark extends MapTransform {
      * game state. The {@code Map} will have been resolved earlier as there may
      * be several marks being read with a common Map.
      */
-    Mark(SequenceEncoder.Decoder t) {
+    public Mark(SequenceEncoder.Decoder t) {
         super(t);
         centre = new Point(t.nextInt(0), t.nextInt(0));
         scrollingLimits = null;
         if (t.nextBoolean(false)) {
             scrollingLimits = new Rectangle(t.nextInt(0), t.nextInt(0),
-                                            t.nextInt(0), t.nextInt(0));
+                    t.nextInt(0), t.nextInt(0));
         }
+    }
+
+    /**
+     * Encode this Mark into a sequence for save and restore.
+     */
+    protected void encode(SequenceEncoder t) {
+        super.encode(t);
+        t.append(centre.x);
+        t.append(centre.y);
+        if (scrollingLimits == null) {
+            t.append(false);
+            return;
+        }
+        t.append(true);
+        t.append(scrollingLimits.x);
+        t.append(scrollingLimits.y);
+        t.append(scrollingLimits.width);
+        t.append(scrollingLimits.height);
     }
 
     /**
      * Initialise an instance by copying another instance
      */
-    Mark(Mark other) {
+    public Mark(Mark other) {
         super(other);
         centre = new Point(other.centre);
         scrollingLimits = other.scrollingLimits == null ? null
@@ -85,7 +104,7 @@ class Mark extends MapTransform {
     /**
      * Get the {@code Map}
      */
-    NewMap getMap() {
+    public NewMap getMap() {
         return map;
     }
 
@@ -93,7 +112,7 @@ class Mark extends MapTransform {
      * Get the centre. Note a copy of the existing centre is returned so the
      * caller cannot change the centre of this Mark by accident.
      */
-    Point getCentre() {
+    public Point getCentre() {
         return new Point(centre);
     }
 

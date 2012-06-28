@@ -37,15 +37,22 @@ public class TopSheet extends Sheet {
     /**
      * Create a TopSheet for the given MapSheet
      */
-    TopSheet(MapSheet m) {
-        super(m);
+    public TopSheet(MapSheet m) {
+        super(m, null);
     }
     
     /**
      * Create a TopSheet from a sequence used to save or restore games.
      */
-    TopSheet(SequenceEncoder.Decoder t) {
-        super(t);
+    public TopSheet(SequenceEncoder.Decoder t) {
+        super(t, null);
+    }
+    
+    /**
+     * Create a TopSheet as a copy of an existing one.
+     */
+    public TopSheet (TopSheet other) {
+        super(other, null);
     }
 
 }

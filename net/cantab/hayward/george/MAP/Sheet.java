@@ -72,7 +72,8 @@ public class Sheet {
     /**
      * Create a new sheet for the given MapSheet.
      */
-    Sheet(MapSheet mapSheet) {
+    public Sheet(MapSheet mapSheet, Sheet parent) {
+        this.parent = parent;
         this.mapSheet = mapSheet;
         mapSheet.sheet = this;
     }
@@ -81,7 +82,8 @@ public class Sheet {
      * Create a new sheet from the information from a sequence used to save and
      * restore the game state.
      */
-    Sheet (SequenceEncoder.Decoder t) {
+    public Sheet (SequenceEncoder.Decoder t, Sheet parent) {
+        this.parent = parent;
         switch (t.nextChar('M')) {
             case 'M':
                 mapSheet = new MapSheet(t);
@@ -91,12 +93,50 @@ public class Sheet {
                 horizontal = true;
             case 'V':
                 topOrLeftPercent = t.nextInt(50);
-                topOrLeft = new Sheet(t);
-                bottomOrRight = new Sheet(t);
+                topOrLeft = new Sheet(t, this);
+                bottomOrRight = new Sheet(t, this);
                 break;
             default:
                 throw new RuntimeException("Bad Game State Sequence");
         }
     }
 
+    /**
+     * Encode this Sheet into a sequence for save and restore.
+     */
+    protected void encode(SequenceEncoder t) {
+        if (mapSheet != null) {
+            t.append('M');
+            mapSheet.encode(t);
+            return;
+        }
+        t.append(horizontal ? 'H' : 'V');
+        t.append(getPercentage());
+        topOrLeft.encode(t);
+        bottomOrRight.encode(t);
+    }
+    
+    /**
+     * Create a new sheet as a copy of an existing one.
+     */
+    public Sheet (Sheet other, Sheet parent) {
+        if (other.mapSheet != null) {
+            mapSheet = new MapSheet(other.mapSheet);
+        } else {
+            horizontal = other.horizontal;
+            topOrLeftPercent = other.getPercentage();
+            topOrLeft = new Sheet(other.topOrLeft, this);
+            bottomOrRight = new Sheet(other.bottomOrRight, this);
+        }
+    }
+    
+    /**
+     * Return the current top or left subdivision's percentage
+     */
+    public int getPercentage() {
+        if (implementer != null) {
+            topOrLeftPercent = implementer.getPercentage();
+        }
+        return topOrLeftPercent;
+    }
 }

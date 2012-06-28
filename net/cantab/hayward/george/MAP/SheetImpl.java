@@ -26,5 +26,10 @@ package net.cantab.hayward.george.MAP;
  * @author George Hayward
  */
 public interface SheetImpl {
+    
+    /**
+     * Get the percentage of size used by current top or left subdivision.
+     */
+    int getPercentage();
 
 }

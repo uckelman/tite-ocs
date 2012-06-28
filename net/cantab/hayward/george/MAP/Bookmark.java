@@ -40,7 +40,7 @@ public class Bookmark extends Mark {
     /**
      * Initialise an instance given all of the values needed
      */
-    Bookmark(NewMap aMap, String aName, Point centre, double zoom, int orient,
+    public Bookmark(NewMap aMap, String aName, Point centre, double zoom, int orient,
             Rectangle limits) {
         super(aMap, centre, zoom, orient, limits);
         name = aName;
@@ -51,15 +51,23 @@ public class Bookmark extends Mark {
      * game state. The {@code Map} will have been resolved earlier as there may
      * be several marks being read with a common Map.
      */
-    Bookmark( SequenceEncoder.Decoder t) {
+    public Bookmark( SequenceEncoder.Decoder t) {
         super(t);
         name = t.nextToken("name");
     }
     
     /**
+     * Encode this Bookmark into a sequence for save and restore.
+     */
+    protected void encode(SequenceEncoder t) {
+        super.encode(t);
+        t.append(name);
+    }
+    
+    /**
      * Initialise an instance by copying another instance
      */
-    Bookmark(Bookmark other) {
+    public Bookmark(Bookmark other) {
         super(other);
         name = other.name;
     }
@@ -67,7 +75,7 @@ public class Bookmark extends Mark {
     /**
      * Get the name of this book mark
      */
-    String getName() {
+    public String getName() {
         return name;
     }
     

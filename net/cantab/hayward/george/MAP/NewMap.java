@@ -17,7 +17,9 @@
  */
 package net.cantab.hayward.george.MAP;
 
+import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.DrawPile;
 import VASSAL.build.module.map.StackMetrics;
@@ -29,49 +31,241 @@ import VASSAL.build.module.map.boardPicker.board.ZonedGrid;
 import VASSAL.build.module.map.boardPicker.board.mapgrid.Zone;
 import VASSAL.command.Command;
 import VASSAL.i18n.Resources;
+import VASSAL.tools.SequenceEncoder;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
- * This class is the replacement for VASSAL.build.module.MAP which preserves
- * the back end piece storage but has none of the front end graphics or window
+ * This class is the replacement for VASSAL.build.module.MAP which preserves the
+ * back end piece storage but has none of the front end graphics or window
  * manipulation. It is not a complete re-implementation as it only does enough
- * to support the modules I wanted to convert.
- * <P>
- * The first map defined is the master map which is displayed initially and all
- * other maps are displayed via their bookmarks within the master map. The master
- * map functionality is implemented within the MasterMap class.
- * <P>
- * As part of saving and loading games this object saves and restores it's list
- * of bookmarks.
+ * to support the modules I wanted to convert. <P> As part of saving and loading
+ * games this object saves and restores it's list of bookmarks.
+ *
  * @author George Hayward
  */
-public class NewMap extends OldMap {
+public class NewMap extends OldMap implements GameComponent {
 
     /**
      * This is the size of the map.
      */
     protected Dimension sizeOfMap;
-    
-    
-    /*
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     */
-    
-    
 
+    /**
+     * The Public Bookmarks defined in this game.
+     */
+    protected List<PublicBookmark> publicBookmarks;
+
+    /**
+     * The current list of private bookmarks for the current Player.
+     */
+    protected List<Bookmark> privateBookmarks;
+
+    /**
+     * This is the structure used to hold the private bookmarks of a single
+     * player.
+     */
+    protected static class PlayerBookmark {
+
+        /**
+         * The player id which is his/her password.
+         */
+        protected String playerId;
+
+        /**
+         * The list of private bookmarks for the player.
+         */
+        protected Bookmark[] privateBookmarks;
+
+        /**
+         * Create new entry with given id and Bookmark arrays
+         */
+        protected PlayerBookmark(String playerId, Bookmark[] bookmarks) {
+            this.playerId = playerId;
+            privateBookmarks = bookmarks;
+        }
+
+        /**
+         * Create a PlayerBookmark from a sequence used to save and restore
+         * games.
+         */
+        protected PlayerBookmark(SequenceEncoder.Decoder t) {
+            playerId = t.nextToken();
+            int i, j;
+            j = t.nextInt(0);
+            privateBookmarks = new Bookmark[j];
+            for (i = 0; i < j; i++) {
+                privateBookmarks[i] = new Bookmark(t);
+            }
+        }
+
+        /**
+         * Encode this PlayerBookmark into a sequence used to save and restore
+         * games.
+         */
+        protected void encode(SequenceEncoder t) {
+            t.append(playerId);
+            t.append(privateBookmarks.length);
+            for (Bookmark b : privateBookmarks) {
+                b.encode(t);
+            }
+        }
+    }
+    /**
+     * All the lists of private bookmarks being held for the game
+     */
+    protected List<PlayerBookmark> allPrivateBookmarks;
+
+    /**
+     * Save the current set of bookmarks.
+     */
+    protected void saveCurrentBookmarks() {
+        String b = MasterMap.currentMaster.controller.getCurrentPlayer();
+        for (PlayerBookmark a : allPrivateBookmarks) {
+            if (b.equals(a.playerId)) {
+                a.privateBookmarks = privateBookmarks.toArray(new Bookmark[0]);
+                return;
+            }
+        }
+        allPrivateBookmarks.add(new PlayerBookmark(b, privateBookmarks.toArray(new Bookmark[0])));
+    }
+
+    /**
+     * Make the private bookmarks for the given player the active ones.
+     */
+    protected void activateBookmarksForPlayer(String playerId) {
+        privateBookmarks = new ArrayList<Bookmark>();
+        for (PlayerBookmark a : allPrivateBookmarks) {
+            if (playerId.equals(a.playerId)) {
+                privateBookmarks = Arrays.asList(a.privateBookmarks);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Player has changed. Change the private bookmarks to fit.
+     */
+    protected void playerChanged() {
+        saveCurrentBookmarks();
+        activateBookmarksForPlayer(MasterMap.currentMaster.controller.getCurrentPlayer());
+    }
+
+    /**
+     * This is the command used to restore the state of the bookmarks within a
+     * window
+     */
+    public class myCommand extends Command {
+
+        /**
+         * The Public Bookmarks defined in this game.
+         */
+        protected PublicBookmark[] myPublicBookmarks;
+
+        /**
+         * All the lists of private bookmarks being held for the game
+         */
+        protected PlayerBookmark[] myAllPrivateBookmarks;
+
+        /**
+         * Create a new Command to restore the current BookMarks
+         */
+        protected myCommand() {
+            myPublicBookmarks = publicBookmarks.toArray(new PublicBookmark[0]);
+            saveCurrentBookmarks();
+            myAllPrivateBookmarks = allPrivateBookmarks.toArray(new PlayerBookmark[0]);
+        }
+
+        /**
+         * Create a new Command from a sequence used for restoring and saving
+         * games
+         */
+        protected myCommand(SequenceEncoder.Decoder t) {
+            int i, j;
+            j = t.nextInt(0);
+            myPublicBookmarks = new PublicBookmark[j];
+            for (i = 0; i < j; i++) {
+                myPublicBookmarks[i] = new PublicBookmark(t);
+            }
+            j = t.nextInt(0);
+            myAllPrivateBookmarks = new PlayerBookmark[j];
+            for (i = 0; i < j; i++) {
+                myAllPrivateBookmarks[i] = new PlayerBookmark(t);
+            }
+        }
+        
+        /**
+         * Encode this Command into a sequence used to save and restore games.
+         */
+        protected void encode(SequenceEncoder t) {
+            MasterMap.currentMaster.encode(NewMap.this, t);
+            t.append(myPublicBookmarks.length);
+            for (PublicBookmark a : myPublicBookmarks) {
+                a.encode(t);
+            }
+            t.append(myAllPrivateBookmarks.length);
+            for (PlayerBookmark a : myAllPrivateBookmarks) {
+                a.encode(t);
+            }
+        }
+
+        @Override
+        protected void executeCommand() {
+            publicBookmarks = Arrays.asList(myPublicBookmarks);
+            allPrivateBookmarks = Arrays.asList(myAllPrivateBookmarks);
+            playerChanged();
+        }
+
+        @Override
+        protected Command myUndoCommand() {
+            return null;
+        }
+    }
+    
+    /**
+     * Create a Command from a sequence used to save and restore games
+     */
+    public Command createCommand(SequenceEncoder.Decoder t) {
+        return new myCommand(t);
+    }
+
+    /**
+     * Add this object to its parent in the tree of defined objects in the
+     * module. At this point any initialisation is done linking the object to
+     * others in the module.
+     *
+     * @param b - The parent object
+     */
+    @Override
+    public void addTo(Buildable b) {
+        super.addTo(b);
+
+        if (MasterMap.currentMaster == null) {
+            throw new RuntimeException("Master Map Missing");
+        }
+        if (MasterMap.currentMaster != this) {
+            MasterMap.currentMaster.subordinateMaps.add(this);
+        }
+    }
+
+    /*
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
     @Override
     public String getAttributeValueString(String key) {
         return null;
@@ -123,11 +317,6 @@ public class NewMap extends OldMap {
             boards.add(b);
         }
         setBoardBoundaries();
-    }
-
-    public Command getRestoreCommand() {
-        // TODO: generate proper restore command
-        return null;
     }
 
     /**

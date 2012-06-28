@@ -19,11 +19,26 @@
 package net.cantab.hayward.george.MAP;
 
 /**
- * These are all the methods which must be implemented by an object which does
- * the front end code for an auxiliary window.
+ * This defines all the methods required from some external object controlling
+ * the game so the map system can work.
  * 
  * @author George Hayward
  */
-public interface AuxiliaryWindowImpl {
+public interface GameControlForMap {
+    
+    /**
+     * This tests if a player has a part in this game or is just a kibitzer.
+     * This determines if the player's bookmarks and open Sheets/Windows are
+     * preserved in a save file.
+     * @param playerId - the identity of the player as his password string.
+     * @return True if the player is part of the game.
+     */
+    public boolean isRealPlayer(String playerId);
+    
+    /**
+     * This returns the id of the current player.
+     * @return the String holding the id of the current player.
+     */
+    public String getCurrentPlayer();
 
 }

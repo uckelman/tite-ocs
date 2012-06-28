@@ -18,12 +18,19 @@
 
 package net.cantab.hayward.george.MAP;
 
+import java.awt.Point;
+
 /**
  * These are all the methods which must be implemented by an object which does
- * the front end code for an auxiliary window.
- * 
+ * the front end code for a Map Sheet.
+ *
  * @author George Hayward
  */
-public interface AuxiliaryWindowImpl {
+public interface MapImpl {
+    
+    /**
+     * Get the current centre of the displayed MapSheet
+     */
+    public Point getCurrentCentre();
 
 }

@@ -15,37 +15,55 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-
 package net.cantab.hayward.george.MAP;
 
 import VASSAL.tools.SequenceEncoder;
 
 /**
- * Instances of this class are responsible for drawing portions of maps upon
- * the display.
- * 
+ * Instances of this class are responsible for drawing portions of maps upon the
+ * display.
+ *
  * @author George Hayward
  */
 public class MapSheet extends Mark {
-    
+
     /**
      * The Sheet to which this MapSheet belongs
      */
     protected Sheet sheet;
-    
+
+    /**
+     * The implementation of this MapSheet
+     */
+    MapImpl implementer;
+
     /**
      * Create a new MapSheet for the given Mark
      */
-    MapSheet(Mark m) {
+    public MapSheet(Mark m) {
         super(m);
     }
-    
+
     /**
      * Create a new MapSheet by reading the data from a sequence used for saving
      * and restoring the game state.
      */
-    MapSheet(SequenceEncoder.Decoder t) {
-        super (t);
+    public MapSheet(SequenceEncoder.Decoder t) {
+        super(t);
     }
 
+    /**
+     * Encode this MapSheet into a sequence for save and restore.
+     */
+    protected void encode(SequenceEncoder t) {
+        centre = implementer.getCurrentCentre();
+        super.encode(t);
+    }
+
+    /**
+     * Create a new map sheet as a copy of an existing one.
+     */
+    public MapSheet(MapSheet other) {
+        super(other);
+    }
 }

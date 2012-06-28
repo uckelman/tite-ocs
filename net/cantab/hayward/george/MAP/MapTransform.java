@@ -82,7 +82,7 @@ public class MapTransform {
     /**
      * Initialise a new instance given the initial zoom and orientation.
      */
-    MapTransform(NewMap aMap, double zoom, int orient) {
+    public MapTransform(NewMap aMap, double zoom, int orient) {
         map = aMap;
         if (zoom == 0.0) zoom = 1.0;
         this.zoom = zoom;
@@ -94,15 +94,24 @@ public class MapTransform {
      * Initialise an instance by reading the zoom and orientation from a
      * sequence used for saving the game state.
      */
-    MapTransform(SequenceEncoder.Decoder t) {
+    public MapTransform(SequenceEncoder.Decoder t) {
         this(MasterMap.currentMaster.getMapFrom(t),
                 t.nextDouble(1.0), t.nextInt(0));
     }
     
     /**
+     * Encode this MapTransform into a sequence for save and restore.
+     */
+    protected void encode(SequenceEncoder t) {
+        MasterMap.currentMaster.encode(map, t);
+        t.append(zoom);
+        t.append(orient);
+    }
+    
+    /**
      * Initialise an instance by copying another instance
      */
-    MapTransform(MapTransform other) {
+    public MapTransform(MapTransform other) {
         map = other.map;
         zoom = other.zoom;
         orient = other.orient;
