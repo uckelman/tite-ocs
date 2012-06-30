@@ -18,30 +18,21 @@
 
 package net.cantab.hayward.george.MAP;
 
-import java.awt.Point;
-
 /**
- * These are all the methods which must be implemented by an object which does
- * the front end code for a Map Sheet.
- *
+ * These are the methods which return the implementations needed to realise
+ * the windows and sheets within a particular window system or with a
+ * particular style of interface.
+ * 
  * @author George Hayward
  */
-public interface MapImpl {
+public interface GetImplementers {
     
-    /**
-     * Get the current centre of the displayed MapSheet
-     */
-    public Point getCurrentCentre();
-
-    /**
-     * Create whatever is needed to realise this MapSheet and add all the sheets
-     * contained to it.
-     */
-    public void realise();
+    public AuxiliaryWindowImpl getAuxiliaryImplementation();
     
-    /**
-     * Delete all the objects created to realise this MapSheet.
-     */
-    public void unRealise();
+    public MainWindowImpl getMainWindowImplementation();
+    
+    public MapImpl getMapSheetImplementation();
+    
+    public SheetImpl getSheetImplementation();
 
 }

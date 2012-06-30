@@ -21,6 +21,8 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.command.Command;
 import VASSAL.tools.SequenceEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,55 +58,55 @@ public class MasterMap extends NewMap {
     /**
      * The base of the tree of sheets being displayed in the main window.
      */
-    protected Sheet mainWindowBase;
+    protected MainSheet mainWindowBase;
 
     /**
      * A list of the base sheet for each auxiliary window open
      */
     protected List<TopSheet> auxWindowBases;
-    
+
     /**
      * This is the structure used to save the open window/sheet definitions for
      * each player
      */
     protected static class PlayerState {
-        
+
         /**
          * The player's id which is his password
          */
         protected String playerId;
-        
+
         /**
          * His main window tree of Sheets
          */
-        protected Sheet mainWindowBase;
-        
+        protected MainSheet mainWindowBase;
+
         /**
          * His auxiliary window base sheets
          */
         protected TopSheet[] auxWindowBases;
-        
+
         /**
          * Create a new PlayerState for the given player id using the supplied
          * main window sheet and list of auxiliary window top sheets
          */
-        protected PlayerState(String playerId, Sheet main, List<TopSheet> aux) {
+        protected PlayerState(String playerId, MainSheet main, List<TopSheet> aux) {
             this.playerId = playerId;
-            mainWindowBase = new Sheet(main, null);
+            mainWindowBase = new MainSheet(main);
             auxWindowBases = new TopSheet[aux.size()];
             int i = 0;
             for (TopSheet t : aux) {
                 auxWindowBases[i++] = new TopSheet(t);
             }
         }
-        
+
         /**
          * Create a new PlayerState from a sequence used to save and restore
          * games.
          */
         protected PlayerState(SequenceEncoder.Decoder t) {
             playerId = t.nextToken();
-            mainWindowBase = new Sheet(t, null);
+            mainWindowBase = new MainSheet(t);
             int i, j;
             j = t.nextInt(0);
             auxWindowBases = new TopSheet[j];
@@ -112,7 +114,7 @@ public class MasterMap extends NewMap {
                 auxWindowBases[i] = new TopSheet(t);
             }
         }
-        
+
         /**
          * Encode this playerState into q sequence used to save and restore
          * games.
@@ -126,19 +128,80 @@ public class MasterMap extends NewMap {
             }
         }
     }
-    
     /**
-     * All the player window/sheet definitions known to the game currently
+     * All the player window/sheet definitions known to the game currently.
      */
     protected List<PlayerState> allPlayers;
+
+    /**
+     * Save the current set of windows and sheets.
+     */
+    protected void saveCurrentSheets() {
+        String b = MasterMap.currentMaster.controller.getCurrentPlayer();
+        for (PlayerState a : allPlayers) {
+            if (b.equals(a.playerId)) {
+                a.mainWindowBase = new MainSheet(mainWindowBase);
+                a.auxWindowBases = new TopSheet[auxWindowBases.size()];
+                int i = 0;
+                for (TopSheet c : auxWindowBases) {
+                    a.auxWindowBases[i++] = new TopSheet(c);
+                }
+                return;
+            }
+        }
+        allPlayers.add(new PlayerState(b, mainWindowBase, auxWindowBases));
+    }
+
+    /**
+     * Unrealise all the existing sheets and windows.
+     */
+    protected void unrealiseCurrent() {
+        mainWindowBase.unRealise();
+        for (TopSheet t : auxWindowBases) {
+            t.unRealise();
+        }
+    }
+
+    /**
+     * Realise all the existing sheets and windows.
+     */
+    protected void realiseCurrent() {
+        mainWindowBase.realise();
+        for (TopSheet t : auxWindowBases) {
+            t.realise();
+        }
+    }
     
-    
+    /**
+     * Setup the default window if none present for this user.
+     */
+    protected void setDefaultWindow() {
+        mainWindowBase = new MainSheet(new MapSheet(publicBookmarks.get(0)));
+    }
+
+    /**
+     * Make the windows and sheets for the given player the active ones.
+     */
+    protected void activateSheetsForPlayer(String playerId) {
+        unrealiseCurrent();
+        auxWindowBases = new ArrayList<TopSheet>();
+        for (PlayerState a : allPlayers) {
+            if (playerId.equals(a.playerId)) {
+                mainWindowBase = new MainSheet(a.mainWindowBase);
+                auxWindowBases = Arrays.asList(a.auxWindowBases);
+                realiseCurrent();
+                return;
+            }
+        }
+        setDefaultWindow();
+        realiseCurrent();
+    }
     
     /**
      * The external game controller
      */
     protected GameControlForMap controller;
-    
+
     /**
      * Set the game controller
      */

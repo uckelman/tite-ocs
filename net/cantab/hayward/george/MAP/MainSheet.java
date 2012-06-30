@@ -1,3 +1,8 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 /* 
  *
  * Copyright (c) 2000-2012 by Rodney Kinney, Joel Uckelman, George Hayward
@@ -15,45 +20,46 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
+
 package net.cantab.hayward.george.MAP;
 
 import VASSAL.tools.SequenceEncoder;
 
 /**
- * This variant of a normal Sheet is used for the first Sheet within an
- * auxiliary window. This provides access to the implementation of the auxiliary
- * window.
- *
+ * This variant of a normal Sheet is used for the first Sheet within the main
+ * window. This provides access to the implementation of the main window.
+ * 
  * @author George Hayward
  */
-public class TopSheet extends Sheet {
+public class MainSheet extends Sheet {
 
-    /**
-     * The implementation of the auxiliary window for which this sheet is the
+        /**
+     * The implementation of the main window for which this sheet is the
      * top one.
      */
-    protected AuxiliaryWindowImpl window;
-
+    protected MainWindowImpl window;
+    
     /**
-     * Create a TopSheet for the given MapSheet
+     * Create a MainSheet for the given MapSheet
      */
-    public TopSheet(MapSheet m) {
+    public MainSheet(MapSheet m) {
         super(m, null);
     }
-
+    
     /**
-     * Create a TopSheet from a sequence used to save or restore games.
+     * Create a MainSheet from a sequence used to save or restore games.
      */
-    public TopSheet(SequenceEncoder.Decoder t) {
+    public MainSheet(SequenceEncoder.Decoder t) {
         super(t, null);
     }
-
+    
     /**
-     * Create a TopSheet as a copy of an existing one.
+     * Create a MainSheet as a copy of an existing one.
      */
-    public TopSheet(TopSheet other) {
+    public MainSheet (MainSheet other) {
         super(other, null);
     }
+
 
     /**
      * Create whatever is needed to realise this Window and add all the sheets
@@ -62,7 +68,7 @@ public class TopSheet extends Sheet {
     public void realise() {
         super.realise();;
         if (window == null) {
-            window = StandardImplementers.implementations.getAuxiliaryImplementation();
+            window = StandardImplementers.implementations.getMainWindowImplementation();
         }
         window.realise();
     }

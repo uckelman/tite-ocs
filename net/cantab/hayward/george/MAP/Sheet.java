@@ -61,14 +61,14 @@ public class Sheet {
      * This is the sheet which occupies the bottom (or right) subdivision.
      */
     protected Sheet bottomOrRight;
-    
+
     /**
      * This is the object which is implementing the Sheet (if divided) within
      * the actual window system. If this is null then the Sheet is not actually
      * implemented yet and is only potential.
      */
     protected SheetImpl implementer;
-    
+
     /**
      * Create a new sheet for the given MapSheet.
      */
@@ -77,12 +77,12 @@ public class Sheet {
         this.mapSheet = mapSheet;
         mapSheet.sheet = this;
     }
-    
+
     /**
      * Create a new sheet from the information from a sequence used to save and
      * restore the game state.
      */
-    public Sheet (SequenceEncoder.Decoder t, Sheet parent) {
+    public Sheet(SequenceEncoder.Decoder t, Sheet parent) {
         this.parent = parent;
         switch (t.nextChar('M')) {
             case 'M':
@@ -115,11 +115,11 @@ public class Sheet {
         topOrLeft.encode(t);
         bottomOrRight.encode(t);
     }
-    
+
     /**
      * Create a new sheet as a copy of an existing one.
      */
-    public Sheet (Sheet other, Sheet parent) {
+    public Sheet(Sheet other, Sheet parent) {
         if (other.mapSheet != null) {
             mapSheet = new MapSheet(other.mapSheet);
         } else {
@@ -129,7 +129,7 @@ public class Sheet {
             bottomOrRight = new Sheet(other.bottomOrRight, this);
         }
     }
-    
+
     /**
      * Return the current top or left subdivision's percentage
      */
@@ -138,5 +138,39 @@ public class Sheet {
             topOrLeftPercent = implementer.getPercentage();
         }
         return topOrLeftPercent;
+    }
+
+    /**
+     * Create whatever is needed to realise this sheet and add all the sheets
+     * contained to it.
+     */
+    public void realise() {
+        if (mapSheet != null) {
+            mapSheet.realise();
+            return;
+        }
+        topOrLeft.realise();
+        bottomOrRight.realise();
+        if (implementer == null) {
+            implementer = StandardImplementers.implementations.getSheetImplementation();
+        }
+        implementer.realise();
+    }
+
+    /**
+     * Delete all the objects created to realise this sheet.
+     */
+    public void unRealise() {
+        if (mapSheet != null) {
+            mapSheet.unRealise();
+            return;
+        }
+        topOrLeft.unRealise();
+        bottomOrRight.unRealise();
+        if (implementer == null) {
+            return;
+        }
+        implementer.unRealise();
+        implementer = null;
     }
 }

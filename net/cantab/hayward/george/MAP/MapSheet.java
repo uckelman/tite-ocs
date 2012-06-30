@@ -66,4 +66,25 @@ public class MapSheet extends Mark {
     public MapSheet(MapSheet other) {
         super(other);
     }
+
+    /**
+     * Create whatever is needed to realise this MapSheet.
+     */
+    public void realise() {
+        if (implementer == null) {
+            implementer = StandardImplementers.implementations.getMapSheetImplementation();
+        }
+        implementer.realise();
+    }
+
+    /**
+     * Delete all the objects created to realise this MapSheet.
+     */
+    public void unRealise() {
+        if (implementer == null) {
+            return;
+        }
+        implementer.unRealise();
+        implementer = null;
+    }
 }

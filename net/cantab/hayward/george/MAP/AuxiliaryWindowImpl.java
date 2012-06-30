@@ -25,5 +25,16 @@ package net.cantab.hayward.george.MAP;
  * @author George Hayward
  */
 public interface AuxiliaryWindowImpl {
+    
+    /**
+     * Create whatever is needed to realise this window and add all the sheets
+     * to it.
+     */
+    public void realise();
+    
+    /**
+     * Delete all the objects created to realise this window.
+     */
+    public void unRealise();
 
 }

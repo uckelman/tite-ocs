@@ -32,4 +32,15 @@ public interface SheetImpl {
      */
     int getPercentage();
 
+    /**
+     * Create whatever is needed to realise this sheet and add all the sheets
+     * contained to it.
+     */
+    public void realise();
+    
+    /**
+     * Delete all the objects created to realise this sheet.
+     */
+    public void unRealise();
+
 }

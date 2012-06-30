@@ -1,3 +1,8 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 /* 
  *
  * Copyright (c) 2000-2012 by Rodney Kinney, Joel Uckelman, George Hayward
@@ -18,29 +23,21 @@
 
 package net.cantab.hayward.george.MAP;
 
-import java.awt.Point;
-
 /**
  * These are all the methods which must be implemented by an object which does
- * the front end code for a Map Sheet.
- *
+ * the front end code for the main window.
  * @author George Hayward
  */
-public interface MapImpl {
-    
-    /**
-     * Get the current centre of the displayed MapSheet
-     */
-    public Point getCurrentCentre();
+public interface MainWindowImpl {
 
     /**
-     * Create whatever is needed to realise this MapSheet and add all the sheets
-     * contained to it.
+     * Create whatever is needed to realise this window (or portion of a window)
+     * and add all the sheets to it.
      */
     public void realise();
     
     /**
-     * Delete all the objects created to realise this MapSheet.
+     * Delete all the objects created to realise this window.
      */
     public void unRealise();
 

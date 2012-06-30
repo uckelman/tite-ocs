@@ -21,27 +21,24 @@ package net.cantab.hayward.george.MAP;
 import java.awt.Point;
 
 /**
- * These are all the methods which must be implemented by an object which does
- * the front end code for a Map Sheet.
  *
  * @author George Hayward
  */
-public interface MapImpl {
-    
-    /**
-     * Get the current centre of the displayed MapSheet
-     */
-    public Point getCurrentCentre();
+public class MapImplement implements MapImpl {
 
-    /**
-     * Create whatever is needed to realise this MapSheet and add all the sheets
-     * contained to it.
-     */
-    public void realise();
-    
-    /**
-     * Delete all the objects created to realise this MapSheet.
-     */
-    public void unRealise();
+    @Override
+    public Point getCurrentCentre() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void realise() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void unRealise() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }
