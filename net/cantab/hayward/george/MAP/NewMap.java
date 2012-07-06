@@ -157,8 +157,19 @@ public class NewMap extends OldMap implements GameComponent {
     }
 
     /**
+     * Get the default public bookmark.
+     */
+    protected PublicBookmark getDefaultBookmark() {
+        if (publicBookmarks.size() == 0) {
+            publicBookmarks.add(new PublicBookmark(this, "Main Map",
+                    new Point(0, 0), 1.0, MapTransform.TOP, null));
+        }
+        return publicBookmarks.get(0);
+    }
+
+    /**
      * This is the command used to restore the state of the bookmarks within a
-     * window
+     * Map for each user.
      */
     public class myCommand extends Command {
 
@@ -168,12 +179,12 @@ public class NewMap extends OldMap implements GameComponent {
         protected PublicBookmark[] myPublicBookmarks;
 
         /**
-         * All the lists of private bookmarks being held for the game
+         * All the lists of private bookmarks being held for the game.
          */
         protected PlayerBookmark[] myAllPrivateBookmarks;
 
         /**
-         * Create a new Command to restore the current BookMarks
+         * Create a new Command to restore the current BookMarks.
          */
         protected myCommand() {
             myPublicBookmarks = publicBookmarks.toArray(new PublicBookmark[0]);
@@ -183,7 +194,7 @@ public class NewMap extends OldMap implements GameComponent {
 
         /**
          * Create a new Command from a sequence used for restoring and saving
-         * games
+         * games.
          */
         protected myCommand(SequenceEncoder.Decoder t) {
             int i, j;
@@ -198,7 +209,7 @@ public class NewMap extends OldMap implements GameComponent {
                 myAllPrivateBookmarks[i] = new PlayerBookmark(t);
             }
         }
-        
+
         /**
          * Encode this Command into a sequence used to save and restore games.
          */
@@ -226,12 +237,19 @@ public class NewMap extends OldMap implements GameComponent {
             return null;
         }
     }
-    
+
     /**
-     * Create a Command from a sequence used to save and restore games
+     * Create a Command from a sequence used to save and restore games.
      */
     public Command createCommand(SequenceEncoder.Decoder t) {
         return new myCommand(t);
+    }
+    
+    /**
+     * Return a Command to restore the current state of this Map.
+     */
+    public Command getRestoreCommand() {
+        return new myCommand();
     }
 
     /**

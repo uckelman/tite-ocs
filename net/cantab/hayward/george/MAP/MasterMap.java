@@ -20,6 +20,7 @@ package net.cantab.hayward.george.MAP;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.command.Command;
+import VASSAL.command.CommandEncoder;
 import VASSAL.tools.SequenceEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ import java.util.List;
  *
  * @author George Hayward
  */
-public class MasterMap extends NewMap {
+public class MasterMap extends NewMap implements CommandEncoder {
 
     /**
      * The current master map object. Every map as created will be the
@@ -116,6 +117,18 @@ public class MasterMap extends NewMap {
         }
 
         /**
+         * Create a new PlayerState from and existing one.
+         */
+        protected PlayerState(PlayerState other) {
+            playerId = other.playerId;
+            mainWindowBase = new MainSheet(other.mainWindowBase);
+            auxWindowBases = new TopSheet[other.auxWindowBases.length];
+            for (int i = 0; i < other.auxWindowBases.length; i++) {
+                auxWindowBases[i] = new TopSheet(other.auxWindowBases[i]);
+            }
+        }
+
+        /**
          * Encode this playerState into q sequence used to save and restore
          * games.
          */
@@ -171,7 +184,7 @@ public class MasterMap extends NewMap {
             t.realise();
         }
     }
-    
+
     /**
      * Setup the default window if none present for this user.
      */
@@ -196,7 +209,74 @@ public class MasterMap extends NewMap {
         setDefaultWindow();
         realiseCurrent();
     }
-    
+
+    /**
+     * Player has changed. Change the windows and sheet to fit.
+     */
+    @Override
+    protected void playerChanged() {
+        super.playerChanged();
+        saveCurrentSheets();
+        activateSheetsForPlayer(controller.getCurrentPlayer());
+    }
+
+    /**
+     * This is the command used to restore the windows and sheets that are open
+     * for each player.
+     */
+    public class myCommand extends Command {
+
+        /**
+         * The copy of all the player states in the Map.
+         */
+        protected PlayerState[] myAllPlayers;
+
+        /**
+         * Create a new Command to restore the current player sheet and window
+         * information.
+         */
+        protected myCommand() {
+            myAllPlayers = new PlayerState[allPlayers.size()];
+            int i = 0;
+            for (PlayerState a : allPlayers) {
+                myAllPlayers[i++] = new PlayerState(a);
+            }
+        }
+
+        /**
+         * Create a new Command from a sequence used for restoring and saving
+         * games.
+         */
+        protected myCommand(SequenceEncoder.Decoder t) {
+            int i, j;
+            j = t.nextInt(0);
+            myAllPlayers = new PlayerState[j];
+            for (i = 0; i < j; i++) {
+                myAllPlayers[i] = new PlayerState(t);
+            }
+        }
+
+        /**
+         * Encode this Command in a sequence used to save and restore games.
+         */
+        protected void encode(SequenceEncoder t) {
+            t.append(myAllPlayers.length);
+            for (PlayerState a : myAllPlayers) {
+                a.encode(t);
+            }
+        }
+
+        @Override
+        protected void executeCommand() {
+            allPlayers = Arrays.asList(myAllPlayers);
+            playerChanged();
+        }
+
+        @Override
+        protected Command myUndoCommand() {
+            return null;
+        }
+    }
     /**
      * The external game controller
      */
@@ -262,6 +342,7 @@ public class MasterMap extends NewMap {
         }
         currentMaster = this;
         super.addTo(b);
+        GameModule.getGameModule().addCommandEncoder(this);
         GameModule.getGameModule().getGameState().addGameComponent(this);
     }
 
@@ -280,11 +361,67 @@ public class MasterMap extends NewMap {
      * When saving a game, each GameComponent should return a {@link
      * Command} that, when executed, restores the GameComponent to its state
      * when the game was saved If this component has no persistent state, return
-     * null
+     * null.
+     *
+     * First get the restore state for the underlying Map and then add all the
+     * other maps restore commands as subcommands and final add the restore
+     * command for the master map as the final subcommand.
      */
     @Override
     public Command getRestoreCommand() {
-        // TODO: write save/restore functionality master + other maps
+        Command c = super.getRestoreCommand();
+        for (NewMap m : subordinateMaps) {
+            c.append(m.getRestoreCommand());
+        }
+        c.append(new myCommand());
+        return null;
+    }
+    /*
+     * Known encoded command object identifiers
+     */
+    private static final String newMapCommand = "GWH_NMC\t";
+
+    private static final String masterMapCommand = "GWH_MMC\t";
+
+    /**
+     * Decode a string into a command object.
+     *
+     * @param command - string to decode.
+     * @return Command object if we know how to decode string otherwise null.
+     */
+    @Override
+    public Command decode(String command) {
+        if (command.startsWith(newMapCommand)) {
+            SequenceEncoder.Decoder t = new SequenceEncoder.Decoder(command, '\t');
+            t.nextToken();
+            return getMapFrom(t).createCommand(t);
+        }
+        if (command.startsWith(masterMapCommand)) {
+            SequenceEncoder.Decoder t = new SequenceEncoder.Decoder(command, '\t');
+            t.nextToken();
+            return new myCommand(t);
+        }
+        return null;
+    }
+
+    /**
+     * Encode a command into a string
+     * @param c the command to be encoded
+     * @return the string which is the encoded command or null if we don't
+     * know how to encode this command.
+     */
+    @Override
+    public String encode(Command c) {
+        if (c instanceof NewMap.myCommand) {
+            SequenceEncoder s = new SequenceEncoder('\t');
+            ((NewMap.myCommand)c).encode(s);
+            return newMapCommand + s.getValue();
+        }
+        if (c instanceof myCommand) {
+            SequenceEncoder s = new SequenceEncoder('\t');
+            ((myCommand)c).encode(s);
+            return masterMapCommand + s.getValue();
+        }
         return null;
     }
 }
