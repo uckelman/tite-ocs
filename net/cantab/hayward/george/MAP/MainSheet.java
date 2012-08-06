@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  *
  * Copyright (c) 2000-2012 by Rodney Kinney, Joel Uckelman, George Hayward
@@ -20,7 +15,6 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-
 package net.cantab.hayward.george.MAP;
 
 import VASSAL.tools.SequenceEncoder;
@@ -28,47 +22,54 @@ import VASSAL.tools.SequenceEncoder;
 /**
  * This variant of a normal Sheet is used for the first Sheet within the main
  * window. This provides access to the implementation of the main window.
- * 
+ *
  * @author George Hayward
  */
 public class MainSheet extends Sheet {
 
-        /**
-     * The implementation of the main window for which this sheet is the
-     * top one.
+    /**
+     * The implementation of the main window for which this sheet is the top
+     * one.
      */
     protected MainWindowImpl window;
     
     /**
+     * The master map to which this main sheet belongs
+     */
+    MasterMap theMaster;
+
+    /**
      * Create a MainSheet for the given MapSheet
      */
-    public MainSheet(MapSheet m) {
+    public MainSheet(MapSheet m, MasterMap master) {
         super(m, null);
+        theMaster = master;
     }
-    
+
     /**
      * Create a MainSheet from a sequence used to save or restore games.
      */
-    public MainSheet(SequenceEncoder.Decoder t) {
+    public MainSheet(SequenceEncoder.Decoder t, MasterMap master) {
         super(t, null);
+        theMaster = master;
     }
-    
+
     /**
      * Create a MainSheet as a copy of an existing one.
      */
-    public MainSheet (MainSheet other) {
+    public MainSheet(MainSheet other) {
         super(other, null);
+        theMaster = other.theMaster;
     }
-
 
     /**
      * Create whatever is needed to realise this Window and add all the sheets
      * contained to it.
      */
     public void realise() {
-        super.realise();;
+        super.realise();
         if (window == null) {
-            window = StandardImplementers.implementations.getMainWindowImplementation();
+            window = StandardImplementers.implementations.getMainWindowImplementation(this);
         }
         window.realise();
     }
@@ -83,5 +84,12 @@ public class MainSheet extends Sheet {
         }
         window.unRealise();
         window = null;
+    }
+    
+    /**
+     * Return the object which realises the contents of this main sheet.
+     */
+    Realiser getLowerRealiser() {
+        return super.getRealiser();
     }
 }

@@ -42,5 +42,10 @@ public interface SheetImpl {
      * Delete all the objects created to realise this sheet.
      */
     public void unRealise();
+    
+    /**
+     * Retrieve the object which realises this sheet.
+     */
+    public Realiser getRealiser();
 
 }

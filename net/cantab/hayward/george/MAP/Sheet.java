@@ -152,7 +152,7 @@ public class Sheet {
         topOrLeft.realise();
         bottomOrRight.realise();
         if (implementer == null) {
-            implementer = StandardImplementers.implementations.getSheetImplementation();
+            implementer = StandardImplementers.implementations.getSheetImplementation(this);
         }
         implementer.realise();
     }
@@ -172,5 +172,32 @@ public class Sheet {
         }
         implementer.unRealise();
         implementer = null;
+    }
+    
+    /**
+     * Get the object that realises this sheet.
+     */
+    protected Realiser getRealiser() {
+        if (mapSheet != null) {
+            return mapSheet.getRealiser();
+        }
+        if (implementer == null) {
+            return null;
+        }
+        return implementer.getRealiser();
+    }
+    
+    /**
+     * Get the Object which realise the top or left portion.
+     */
+    protected Realiser getTopLeft() {
+        return topOrLeft.getRealiser();
+    }
+    
+    /**
+     * Get the object which realises the bottom or right portion
+     */
+    protected Realiser getBottomRight() {
+        return bottomOrRight.getRealiser();
     }
 }

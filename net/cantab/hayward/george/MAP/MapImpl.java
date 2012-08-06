@@ -44,4 +44,9 @@ public interface MapImpl {
      */
     public void unRealise();
 
+    /**
+     * Retrieve the object which realises this map sheet.
+     */
+    public Realiser getRealiser();
+
 }

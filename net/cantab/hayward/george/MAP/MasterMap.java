@@ -70,7 +70,7 @@ public class MasterMap extends NewMap implements CommandEncoder {
      * This is the structure used to save the open window/sheet definitions for
      * each player
      */
-    protected static class PlayerState {
+    protected class PlayerState {
 
         /**
          * The player's id which is his password
@@ -107,7 +107,7 @@ public class MasterMap extends NewMap implements CommandEncoder {
          */
         protected PlayerState(SequenceEncoder.Decoder t) {
             playerId = t.nextToken();
-            mainWindowBase = new MainSheet(t);
+            mainWindowBase = new MainSheet(t, MasterMap.this);
             int i, j;
             j = t.nextInt(0);
             auxWindowBases = new TopSheet[j];
@@ -189,7 +189,7 @@ public class MasterMap extends NewMap implements CommandEncoder {
      * Setup the default window if none present for this user.
      */
     protected void setDefaultWindow() {
-        mainWindowBase = new MainSheet(new MapSheet(publicBookmarks.get(0)));
+        mainWindowBase = new MainSheet(new MapSheet(publicBookmarks.get(0)), this);
     }
 
     /**
@@ -218,6 +218,18 @@ public class MasterMap extends NewMap implements CommandEncoder {
         super.playerChanged();
         saveCurrentSheets();
         activateSheetsForPlayer(controller.getCurrentPlayer());
+    }
+
+    /**
+     * This is the method called from the game controller when it detects that
+     * the player has changed. It calls every NewMap in the module to do what is
+     * required.
+     */
+    public void doPlayerChanged() {
+        for (NewMap m : subordinateMaps) {
+            m.playerChanged();
+        }
+        playerChanged();
     }
 
     /**
@@ -269,7 +281,6 @@ public class MasterMap extends NewMap implements CommandEncoder {
         @Override
         protected void executeCommand() {
             allPlayers = Arrays.asList(myAllPlayers);
-            playerChanged();
         }
 
         @Override
@@ -347,6 +358,37 @@ public class MasterMap extends NewMap implements CommandEncoder {
     }
 
     /**
+     * Initialise the Map for a Game.
+     */
+    @Override
+    protected void gameStarting() {
+        for (NewMap m : subordinateMaps) {
+            m.gameStarting();
+        }
+        super.gameStarting();
+        doPlayerChanged();
+        mainWindowBase.realise();
+        for (TopSheet a : auxWindowBases) {
+            a.realise();
+        }
+    }
+
+    /**
+     * Clean up the Map after a Game.
+     */
+    @Override
+    protected void gameFinishing() {
+        mainWindowBase.unRealise();
+        for (TopSheet a : auxWindowBases) {
+            a.unRealise();
+        }
+        for (NewMap m : subordinateMaps) {
+            m.gameFinishing();
+        }
+        super.gameFinishing();
+    }
+
+    /**
      * Notify the GameComponent that a game has started/ended
      *
      * @param gameStarting if true, a game is starting. If false, then a game is
@@ -354,7 +396,11 @@ public class MasterMap extends NewMap implements CommandEncoder {
      */
     @Override
     public void setup(boolean gameStarting) {
-        //TODO: Write setup functionality master map + other maps
+        if (gameStarting) {
+            this.gameStarting();
+        } else {
+            gameFinishing();
+        }
     }
 
     /**
@@ -406,20 +452,21 @@ public class MasterMap extends NewMap implements CommandEncoder {
 
     /**
      * Encode a command into a string
+     *
      * @param c the command to be encoded
-     * @return the string which is the encoded command or null if we don't
-     * know how to encode this command.
+     * @return the string which is the encoded command or null if we don't know
+     * how to encode this command.
      */
     @Override
     public String encode(Command c) {
         if (c instanceof NewMap.myCommand) {
             SequenceEncoder s = new SequenceEncoder('\t');
-            ((NewMap.myCommand)c).encode(s);
+            ((NewMap.myCommand) c).encode(s);
             return newMapCommand + s.getValue();
         }
         if (c instanceof myCommand) {
             SequenceEncoder s = new SequenceEncoder('\t');
-            ((myCommand)c).encode(s);
+            ((myCommand) c).encode(s);
             return masterMapCommand + s.getValue();
         }
         return null;

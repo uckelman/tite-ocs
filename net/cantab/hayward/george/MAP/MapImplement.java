@@ -25,6 +25,10 @@ import java.awt.Point;
  * @author George Hayward
  */
 public class MapImplement implements MapImpl {
+    
+    protected MapImplement(MapSheet master) {
+        
+    }
 
     @Override
     public Point getCurrentCentre() {
@@ -38,6 +42,11 @@ public class MapImplement implements MapImpl {
 
     @Override
     public void unRealise() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Realiser getRealiser() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

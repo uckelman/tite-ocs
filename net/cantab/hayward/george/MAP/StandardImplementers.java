@@ -35,23 +35,23 @@ public class StandardImplementers implements GetImplementers {
     }
 
     @Override
-    public AuxiliaryWindowImpl getAuxiliaryImplementation() {
-        return new AuxiliaryWindowImplement();
+    public AuxiliaryWindowImpl getAuxiliaryImplementation(TopSheet master) {
+        return new AuxiliaryWindowImplement(master);
     }
 
     @Override
-    public MainWindowImpl getMainWindowImplementation() {
-        return new MainWindowImplement();
+    public MainWindowImpl getMainWindowImplementation(MainSheet master) {
+        return new MainWindowImplement(master);
     }
 
     @Override
-    public MapImpl getMapSheetImplementation() {
-        return new MapImplement();
+    public MapImpl getMapSheetImplementation(MapSheet master) {
+        return new MapImplement(master);
     }
 
     @Override
-    public SheetImpl getSheetImplementation() {
-        return new SheetImplement();
+    public SheetImpl getSheetImplementation(Sheet master) {
+        return new SheetImplement(master);
     }
 
 }

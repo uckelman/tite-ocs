@@ -72,7 +72,7 @@ public class MapSheet extends Mark {
      */
     public void realise() {
         if (implementer == null) {
-            implementer = StandardImplementers.implementations.getMapSheetImplementation();
+            implementer = StandardImplementers.implementations.getMapSheetImplementation(this);
         }
         implementer.realise();
     }
@@ -87,4 +87,16 @@ public class MapSheet extends Mark {
         implementer.unRealise();
         implementer = null;
     }
+    
+    
+    /**
+     * Get the object that realises this sheet.
+     */
+    public Realiser getRealiser() {
+        if (implementer == null) {
+            return null;
+        }
+        return implementer.getRealiser();
+    }
+
 }

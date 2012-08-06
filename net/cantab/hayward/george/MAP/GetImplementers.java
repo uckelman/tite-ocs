@@ -27,12 +27,12 @@ package net.cantab.hayward.george.MAP;
  */
 public interface GetImplementers {
     
-    public AuxiliaryWindowImpl getAuxiliaryImplementation();
+    public AuxiliaryWindowImpl getAuxiliaryImplementation(TopSheet master);
     
-    public MainWindowImpl getMainWindowImplementation();
+    public MainWindowImpl getMainWindowImplementation(MainSheet master);
     
-    public MapImpl getMapSheetImplementation();
+    public MapImpl getMapSheetImplementation(MapSheet master);
     
-    public SheetImpl getSheetImplementation();
+    public SheetImpl getSheetImplementation(Sheet master);
 
 }

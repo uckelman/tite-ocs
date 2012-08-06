@@ -61,9 +61,11 @@ public class OldMap extends VASSAL.build.module.Map {
     // getAttributeValueString handled by new implementation
     @Override
     public void build(Element e) {
-        if (e != null) {
-            super.build(e);
-            launchButton = null; // undo this
+    // Skip the old build as it does a lot of front ebd stuff
+        try {
+            Method m = getClass().getSuperclass().getSuperclass().getDeclaredMethod("build", Element.class);
+            m.invoke(this, e);
+        } catch (Exception f) {
         }
     }
 

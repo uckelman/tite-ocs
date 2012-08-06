@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.w3c.dom.Element;
 
 /**
  * This class is the replacement for VASSAL.build.module.MAP which preserves the
@@ -229,7 +230,6 @@ public class NewMap extends OldMap implements GameComponent {
         protected void executeCommand() {
             publicBookmarks = Arrays.asList(myPublicBookmarks);
             allPrivateBookmarks = Arrays.asList(myAllPrivateBookmarks);
-            playerChanged();
         }
 
         @Override
@@ -244,12 +244,27 @@ public class NewMap extends OldMap implements GameComponent {
     public Command createCommand(SequenceEncoder.Decoder t) {
         return new myCommand(t);
     }
-    
+
     /**
      * Return a Command to restore the current state of this Map.
      */
+    @Override
     public Command getRestoreCommand() {
         return new myCommand();
+    }
+
+    /**
+     * Initialise the Map for a Game.
+     */
+    protected void gameStarting() {
+    }
+
+    /**
+     * Clean up the Map after a Game.
+     */
+    protected void gameFinishing() {
+        pieces.clear();
+        boards.clear();
     }
 
     /**
@@ -262,12 +277,24 @@ public class NewMap extends OldMap implements GameComponent {
     @Override
     public void addTo(Buildable b) {
         super.addTo(b);
-
         if (MasterMap.currentMaster == null) {
             throw new RuntimeException("Master Map Missing");
         }
         if (MasterMap.currentMaster != this) {
             MasterMap.currentMaster.subordinateMaps.add(this);
+        }
+    }
+
+    /**
+     * Build a new Map object from the module save file.
+     */
+    @Override
+    public void build(Element e) {
+        super.build(e);
+        if (e != null) {
+            // TODO: Check required subordinate object present
+        } else {
+            // TODO: Create standard set of subordinate elements
         }
     }
 
@@ -284,6 +311,19 @@ public class NewMap extends OldMap implements GameComponent {
      *
      *
      */
+    /**
+     * Get Default window title. This has been carried across from the old map
+     * system.
+     *
+     * @return
+     */
+    protected String getDefaultWindowTitle() {
+        return getLocalizedMapName().length() > 0
+                ? getLocalizedMapName()
+                : Resources.getString("Map.window_title",
+                        GameModule.getGameModule().getLocalizedGameName()); //$NON-NLS-1$
+    }
+
     @Override
     public String getAttributeValueString(String key) {
         return null;

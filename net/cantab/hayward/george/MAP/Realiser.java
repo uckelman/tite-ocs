@@ -19,24 +19,12 @@
 package net.cantab.hayward.george.MAP;
 
 /**
- * This class is the implementation of the auxiliary window.
+ * This interface is implemented by any objects which realise the front end for
+ * MapSheets or Sheets and need to passed through to another implementer. This
+ * hides the real type f Object being passed.
  * 
  * @author George Hayward
  */
-public class AuxiliaryWindowImplement implements AuxiliaryWindowImpl {
-    
-    protected AuxiliaryWindowImplement(TopSheet master) {
-        
-    }
-
-    @Override
-    public void realise() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void unRealise() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+public interface Realiser {
 
 }

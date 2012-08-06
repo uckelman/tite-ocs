@@ -62,7 +62,7 @@ public class TopSheet extends Sheet {
     public void realise() {
         super.realise();;
         if (window == null) {
-            window = StandardImplementers.implementations.getAuxiliaryImplementation();
+            window = StandardImplementers.implementations.getAuxiliaryImplementation(this);
         }
         window.realise();
     }
