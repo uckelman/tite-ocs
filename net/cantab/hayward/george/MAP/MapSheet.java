@@ -92,7 +92,7 @@ public class MapSheet extends Mark {
     /**
      * Get the object that realises this sheet.
      */
-    public Realiser getRealiser() {
+    public Object getRealiser() {
         if (implementer == null) {
             return null;
         }

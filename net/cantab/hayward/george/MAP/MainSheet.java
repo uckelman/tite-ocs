@@ -89,7 +89,7 @@ public class MainSheet extends Sheet {
     /**
      * Return the object which realises the contents of this main sheet.
      */
-    Realiser getLowerRealiser() {
+    Object getLowerRealiser() {
         return super.getRealiser();
     }
 }

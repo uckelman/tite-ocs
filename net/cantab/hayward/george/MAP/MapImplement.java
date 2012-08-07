@@ -46,7 +46,7 @@ public class MapImplement implements MapImpl {
     }
 
     @Override
-    public Realiser getRealiser() {
+    public Object getRealiser() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

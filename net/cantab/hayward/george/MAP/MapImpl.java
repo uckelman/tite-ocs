@@ -47,6 +47,6 @@ public interface MapImpl {
     /**
      * Retrieve the object which realises this map sheet.
      */
-    public Realiser getRealiser();
+    public Object getRealiser();
 
 }

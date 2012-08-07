@@ -46,6 +46,6 @@ public interface SheetImpl {
     /**
      * Retrieve the object which realises this sheet.
      */
-    public Realiser getRealiser();
+    public Object getRealiser();
 
 }

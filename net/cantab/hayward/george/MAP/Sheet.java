@@ -177,7 +177,7 @@ public class Sheet {
     /**
      * Get the object that realises this sheet.
      */
-    protected Realiser getRealiser() {
+    protected Object getRealiser() {
         if (mapSheet != null) {
             return mapSheet.getRealiser();
         }
@@ -190,14 +190,14 @@ public class Sheet {
     /**
      * Get the Object which realise the top or left portion.
      */
-    protected Realiser getTopLeft() {
+    protected Object getTopLeft() {
         return topOrLeft.getRealiser();
     }
     
     /**
      * Get the object which realises the bottom or right portion
      */
-    protected Realiser getBottomRight() {
+    protected Object getBottomRight() {
         return bottomOrRight.getRealiser();
     }
 }

@@ -38,7 +38,7 @@ public class SheetImplement implements SheetImpl, LayoutManager {
     /**
      * The split pane which implements the system in Swing.
      */
-    protected mySplitPane splitter;
+    protected JSplitPane splitter;
     
     /**
      * The layout manager of the split pane.
@@ -123,7 +123,7 @@ public class SheetImplement implements SheetImpl, LayoutManager {
      */
     @Override
     public void realise() {
-        splitter = new mySplitPane(theMaster.horizontal 
+        splitter = new JSplitPane(theMaster.horizontal 
                                   ? JSplitPane.HORIZONTAL_SPLIT
                                   : JSplitPane.VERTICAL_SPLIT, true,
                                   (Component)theMaster.getTopLeft(),
@@ -140,17 +140,8 @@ public class SheetImplement implements SheetImpl, LayoutManager {
     }
 
     @Override
-    public Realiser getRealiser() {
+    public Object getRealiser() {
         return splitter;
     }
 
-    /**
-     * Wrapper class for Split Pane.
-     */
-    public class mySplitPane extends JSplitPane implements Realiser {
-        
-        mySplitPane(int orient, boolean contin, Component l, Component r) {
-            super (orient, contin, l, r);
-        }
-    }
 }
