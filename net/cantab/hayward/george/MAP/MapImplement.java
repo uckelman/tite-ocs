@@ -18,7 +18,9 @@
 
 package net.cantab.hayward.george.MAP;
 
+import VASSAL.tools.AdjustableSpeedScrollPane;
 import java.awt.Point;
+import javax.swing.JComponent;
 
 /**
  *
@@ -26,6 +28,21 @@ import java.awt.Point;
  */
 public class MapImplement implements MapImpl {
     
+    /**
+     * The scroll view showing the map sheet
+     */
+    AdjustableSpeedScrollPane scroll;
+    
+    /**
+     * The view which is to be scrolled which has the map sheet as a subview
+     * possibly a limited portion
+     */
+    JComponent limiter;
+    
+    /**
+     * Create a new implementation of a MapSheet.
+     * @param master the MapSheet which is to be implemented
+     */
     protected MapImplement(MapSheet master) {
         
     }
