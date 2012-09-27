@@ -46,6 +46,7 @@ import net.cantab.hayward.george.OCS.Counters.AttackCapable;
 import net.cantab.hayward.george.OCS.Counters.AttackMarker;
 import net.cantab.hayward.george.OCS.Counters.Controlled;
 import net.cantab.hayward.george.OCS.Counters.Division;
+import net.cantab.hayward.george.OCS.Counters.Fighter;
 import net.cantab.hayward.george.OCS.Counters.GameMarker;
 import net.cantab.hayward.george.OCS.Counters.Hedgehog;
 import net.cantab.hayward.george.OCS.Counters.Land;
@@ -452,6 +453,28 @@ public class StackOverride extends Stack {
                             c.setSecurity(OcsCounter.HIDDEN);
                         }
                     }
+                }
+            }
+        }
+        /*
+         * Now turn on ZOCs for all attack capable units
+         */
+        for ( i = pieceCount - 1; i >= 0 ; i-- ) {
+            if (!(pieces[i] instanceof AttackCapable)) continue;
+            AttackCapable a = (AttackCapable)pieces[i];
+            a.hasZOC = a.security >= OcsCounter.VISIBLE && isCombatModeAttackCapable(a);
+        }
+        /*
+         * Now turn on PZs for all airbases
+         */
+        for (int j = 0; j < 2; j++) {
+            boolean fighterFound = false;
+            for ( i = pieceCount - 1; i >= 0 ; i-- ) {
+                if (pieces[i].theSide != j) continue;
+                if (pieces[i] instanceof Airbase) {
+                    ((Airbase)pieces[i]).hasPZ = fighterFound;
+                } else if (pieces[i] instanceof Fighter) {
+                    fighterFound = true;
                 }
             }
         }

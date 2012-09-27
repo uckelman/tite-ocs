@@ -43,6 +43,7 @@ import net.cantab.hayward.george.OCS.Counters.AttackCapable;
 import net.cantab.hayward.george.OCS.Counters.AttackMarker;
 import net.cantab.hayward.george.OCS.Counters.Defensive;
 import net.cantab.hayward.george.OCS.Counters.Division;
+import net.cantab.hayward.george.OCS.Counters.Fighter;
 import net.cantab.hayward.george.OCS.Counters.GameMarker;
 import net.cantab.hayward.george.OCS.Counters.HeadQuarters;
 import net.cantab.hayward.george.OCS.Counters.Hedgehog;
@@ -101,7 +102,7 @@ public class PieceProcessor extends JPanel {
             add(k);
         }
     }
-    static private OcsCounter[] types = new OcsCounter[20];
+    static private OcsCounter[] types = new OcsCounter[21];
     static String lastFactors = "";
     static String lastDivision = "";
     static String lastSide = "";
@@ -142,7 +143,8 @@ public class PieceProcessor extends JPanel {
                         types[16].getDescription(),
                         types[17].getDescription(),
                         types[18].getDescription(),
-                        types[19].getDescription()});
+                        types[19].getDescription(),
+                        types[20].getDescription()});
             sideConfig = new StringEnumConfigurer(null,
                     "Pick the side",
                     new String[]{"No Side",
@@ -320,6 +322,7 @@ public class PieceProcessor extends JPanel {
         types[17] = new Under();
         types[18] = new Leader();
         types[19] = new ReplaceCard();
+        types[20] = new Fighter();
     }
     JButton nextButton;
     JButton prevButton;

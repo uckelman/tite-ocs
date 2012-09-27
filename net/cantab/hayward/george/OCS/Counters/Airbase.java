@@ -23,7 +23,17 @@
 
 package net.cantab.hayward.george.OCS.Counters;
 
+import VASSAL.counters.AreaOfEffect;
+import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
+import com.sun.org.apache.bcel.internal.classfile.InnerClass;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import net.cantab.hayward.george.OCS.AreaOfEffectOverride;
+import net.cantab.hayward.george.OCS.Statics;
 
 /**
  *
@@ -52,15 +62,44 @@ public class Airbase extends Controlled {
         this(ID, null);
     }
 
+    public boolean hasPZ = false;
+    
+    AreaOfEffectOverride drawer = new AreaOfEffectOverride(Color.GREEN);
+    
     /**
      * Construct an airbase counter from its type string
      * @param type
      */
     public Airbase(String type, GamePiece p ) {
         super(p);
+        drawer.setRadius(10);
+    }
+    
+    @Override
+    public void setInner(GamePiece p) {
+        super.setInner(p);
+        if (drawer != null) drawer.setInner(p);
     }
 
     public String getDescription() {
         return "Airbase";
+    }
+    
+    public void draw(Graphics g, int x, int y, Component obs, double zoom) {
+        drawer.setInner(piece);
+        drawer.setActive(theSide < 0 ? false :(hasPZ & Statics.showPZs[theSide]));
+        drawer.draw(g, x, y, obs, zoom);
+    }
+    
+    public Rectangle boundingBox() {
+        drawer.setInner(piece);
+        drawer.setActive(theSide < 0 ? false :(hasPZ & Statics.showPZs[theSide]));
+        return drawer.boundingBox();
+    }
+    
+    public Shape getShape() {
+        drawer.setInner(piece);
+        drawer.setActive(theSide < 0 ? false :(hasPZ & Statics.showPZs[theSide]));
+        return drawer.getShape();
     }
 }

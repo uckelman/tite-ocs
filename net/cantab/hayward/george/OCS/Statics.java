@@ -77,6 +77,7 @@ import net.cantab.hayward.george.OCS.Counters.AttackCapable;
 import net.cantab.hayward.george.OCS.Counters.AttackMarker;
 import net.cantab.hayward.george.OCS.Counters.Defensive;
 import net.cantab.hayward.george.OCS.Counters.Division;
+import net.cantab.hayward.george.OCS.Counters.Fighter;
 import net.cantab.hayward.george.OCS.Counters.GameMarker;
 import net.cantab.hayward.george.OCS.Counters.HeadQuarters;
 import net.cantab.hayward.george.OCS.Counters.Hedgehog;
@@ -91,6 +92,7 @@ import net.cantab.hayward.george.OCS.Counters.SupplyMarker;
 import net.cantab.hayward.george.OCS.Counters.Transport;
 import net.cantab.hayward.george.OCS.Counters.Under;
 import net.cantab.hayward.george.OCS.Parsing.ParseText;
+import org.apache.commons.io.filefilter.FalseFileFilter;
 
 /**
  * This defines all the static data needed by the module
@@ -190,6 +192,14 @@ public class Statics extends AbstractConfigurable
      */
     public static Statics theStatics;
     /**
+     *  Whether to display PZs for a side
+     */
+    public static boolean[] showPZs = {false,false}; 
+    /**
+     * Whether to show ZOCs for a side
+     */
+    public static boolean[] showZOCs = {false, false};
+    /**
      * A value which is updated whenever a piece is moved. It is used to determine
      * whether the security states of pieces within a stack need to be recalculated
      */
@@ -262,6 +272,7 @@ public class Statics extends AbstractConfigurable
     static boolean hexRanges = false;
     /**
      * The main map for this module
+            st.nextInt(0);
      */
     public static Map theMap;
     /**
@@ -331,6 +342,7 @@ public class Statics extends AbstractConfigurable
         PieceDefiner.addDefinition(new Under());
         PieceDefiner.addDefinition(new ReplaceCard());
         PieceDefiner.addDefinition(new Leader());
+        PieceDefiner.addDefinition(new Fighter());
 
     }
 
@@ -352,6 +364,7 @@ public class Statics extends AbstractConfigurable
 
     /**
      * Build the Piece Ptr data
+            st.nextInt(0);
      */
     static void buildPiecePtrs() {
         if (thePieces != null) {
@@ -812,7 +825,48 @@ public class Statics extends AbstractConfigurable
                 }
             }
         }
+        if (curCommander.sidesCommanded[0] || curCommander.sidesCommanded[1]) {
+            for (i = 0; i < 2; i++) {
+                final int m = i;
+                mi = new JMenuItem((showPZs[i] ? "Hide " : "Show ") + theSides[i].name + " PZs");
+                mi.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        displayPZs(m);
+                    }
+                });
+                mi.setEnabled(true);
+                theMenu.add(mi);
+                mi = new JMenuItem((showZOCs[i] ? "Hide " : "Show ") + theSides[i].name + " ZOCs");
+                mi.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        displayZOCs(m);
+                    }
+                });
+                mi.setEnabled(true);
+                theMenu.add(mi);
+            }
+        }
         theMenu.getPopupMenu().show(commandLaunch, 0, commandLaunch.getHeight());
+    }
+    
+    /**
+     * Flip display of PZs
+     */
+    public void displayPZs(int i) {
+        showPZs[i] = !showPZs[i];
+        theMap.repaint();
+    }
+
+    /**
+     * Flip display of ZOCs
+     */
+    public void displayZOCs(int i) {
+        showZOCs[i] = !showZOCs[i];
+        theMap.repaint();
     }
 
     /**
@@ -884,7 +938,7 @@ public class Statics extends AbstractConfigurable
     public String[] getAttributeNames() {
         return new String[]{"FIRST", "SECOND", "MODULE"};
     }
-
+    
     public void setAttribute(String key, Object value) {
         if (value instanceof String) {
             String s = (String) value;

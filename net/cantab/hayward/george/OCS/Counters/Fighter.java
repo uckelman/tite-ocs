@@ -1,6 +1,7 @@
-/*
+/* 
+ * $Id$
  *
- * Copyright (c) 2010 by George Hayward
+ * Copyright (c) 2000-2011 by Rodney Kinney, Joel Uckelman, George Hayward
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,18 +22,17 @@ package net.cantab.hayward.george.OCS.Counters;
 import VASSAL.counters.GamePiece;
 
 /**
- * Aircraft Counters
+ *
  * @author George Hayward
  */
-public class Aircraft extends Unit {
+public class Fighter extends Aircraft {
 
     /**
      * The string which identifies this string type in save files and also the
      * piece definition file. It ends with a semicolon because that is the
      * delimiter for the subfields within a definition
      */
-    public static final String oldID = "ac;";
-    public static final String ID = "ax;";
+    public static final String ID = "ff;";
 
     /**
      * Return the ID
@@ -44,7 +44,7 @@ public class Aircraft extends Unit {
     /**
      * Parameterless constructor
      */
-    public Aircraft() {
+    public Fighter() {
         this(ID, null);
     }
 
@@ -52,11 +52,11 @@ public class Aircraft extends Unit {
      * Construct a aircraft counter from its type string
      * @param type
      */
-    public Aircraft(String type, GamePiece p ) {
+    public Fighter(String type, GamePiece p ) {
         super(type, p);
     }
 
     public String getDescription() {
-        return "Aircraft";
+        return "Fighter";
     }
 }
