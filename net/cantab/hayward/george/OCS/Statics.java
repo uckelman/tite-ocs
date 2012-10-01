@@ -100,13 +100,14 @@ import org.apache.commons.io.filefilter.FalseFileFilter;
  * @author George Hayward
  */
 public class Statics extends AbstractConfigurable
-        implements CommandEncoder,
-        GameComponent {
+    implements CommandEncoder,
+               GameComponent {
 
     /**
      * The structure of a piece pointer
      */
     static class PiecePtr {
+
         String name;
         String image;
         OcsCounter piece;
@@ -123,48 +124,56 @@ public class Statics extends AbstractConfigurable
     final static int Hubes = 6;
     final static int Sicily = 7;
     final static int Burma = 8;
+
     /**
      * Returns true if game is Baltic Gap
      */
     public boolean isBalticGap() {
         return module == BalticGap;
     }
+
     /**
      * True if this game is DAK
      */
     public boolean isDAK() {
         return module == DAK;
     }
+
     /**
      * True if this game is Case Blue
      */
     public boolean isCaseBlue() {
         return module == CaseBlue;
     }
+
     /**
      * True if this game is Korea
      */
     public boolean isKorea() {
         return module == Korea;
     }
+
     /**
      * True if this game is Tunisia
      */
     public boolean isTunisia() {
         return module == Tunisia;
     }
+
     /**
      * True if this game is Hubes
      */
     public boolean isHubes() {
         return module == Hubes;
     }
+
     /**
      * True if this game is Sicily
      */
     public boolean isSicily() {
         return module == Sicily;
     }
+
     /**
      * True if this game is Burma
      */
@@ -192,16 +201,17 @@ public class Statics extends AbstractConfigurable
      */
     public static Statics theStatics;
     /**
-     *  Whether to display PZs for a side
+     * Whether to display PZs for a side
      */
-    public static boolean[] showPZs = {false,false}; 
+    public static boolean[] showPZs = {false, false};
     /**
      * Whether to show ZOCs for a side
      */
     public static boolean[] showZOCs = {false, false};
     /**
-     * A value which is updated whenever a piece is moved. It is used to determine
-     * whether the security states of pieces within a stack need to be recalculated
+     * A value which is updated whenever a piece is moved. It is used to
+     * determine whether the security states of pieces within a stack need to be
+     * recalculated
      */
     static int check = 1;
     /**
@@ -222,8 +232,8 @@ public class Statics extends AbstractConfigurable
      */
     static boolean rangeInUse = false;
     /**
-     * True if nearest AEP to be used for flight distance calculations rather then
-     * one which gives minimal distance
+     * True if nearest AEP to be used for flight distance calculations rather
+     * then one which gives minimal distance
      */
     static boolean useNearest = false;
     /**
@@ -231,7 +241,8 @@ public class Statics extends AbstractConfigurable
      */
     static int zoneSecurity = OcsCounter.VISIBLE;
     /**
-     * Range at which opposing stacks including aircraft become invisible in pixels
+     * Range at which opposing stacks including aircraft become invisible in
+     * pixels
      */
     static int rangeAirHidden = 0;
     /**
@@ -271,8 +282,7 @@ public class Statics extends AbstractConfigurable
      */
     static boolean hexRanges = false;
     /**
-     * The main map for this module
-            st.nextInt(0);
+     * The main map for this module st.nextInt(0);
      */
     public static Map theMap;
     /**
@@ -363,8 +373,7 @@ public class Statics extends AbstractConfigurable
     }
 
     /**
-     * Build the Piece Ptr data
-            st.nextInt(0);
+     * Build the Piece Ptr data st.nextInt(0);
      */
     static void buildPiecePtrs() {
         if (thePieces != null) {
@@ -422,7 +431,7 @@ public class Statics extends AbstractConfigurable
             thePieces[i].image = front;
             if (!(p instanceof OcsCounter)) {
                 GameModule.getGameModule().getChatter().show("*** Not an OCS Counter "
-                        + pname + " - image = " + front);
+                                                             + pname + " - image = " + front);
                 thePieces[i].piece = null;
             } else {
                 thePieces[i].piece = (OcsCounter) p;
@@ -433,7 +442,7 @@ public class Statics extends AbstractConfigurable
     static OcsCounter lastConverted = null;
 
     /**
-     * Find a piece which matches the given name and image name. Return  the
+     * Find a piece which matches the given name and image name. Return the
      * correct type of BasicCounter pointing at this piece
      */
     static OcsCounter findMatching(String name, String imageName, GamePiece p) {
@@ -536,7 +545,7 @@ public class Statics extends AbstractConfigurable
         }
         if (b == null) {
             GameModule.getGameModule().getChatter().show("*** Unable to convert " + pname + " - image = " + front);
-            b = new AttackCapable( AttackCapable.ID + "1;;", p);
+            b = new AttackCapable(AttackCapable.ID + "1;;", p);
         }
         return b;
     }
@@ -557,10 +566,12 @@ public class Statics extends AbstractConfigurable
 
     /**
      * Create the debug Toolbar entry. This is a null method which is overriden
-     * in @class Debug which is a subclass of this one. When testing the system the
-     * debug classes are used and for release the buildfile is editted to replace
-     * the debug classes with the normal classes. The debug classes are always
-     * subclasses of the classes they debug.
+     * in
+     *
+     * @class Debug which is a subclass of this one. When testing the system the
+     * debug classes are used and for release the buildfile is editted to
+     * replace the debug classes with the normal classes. The debug classes are
+     * always subclasses of the classes they debug.
      */
     void createDebugEntries() {
     }
@@ -571,7 +582,6 @@ public class Statics extends AbstractConfigurable
     void createNormalEntries() {
         commandLaunch = new JButton("Command...");
         commandLaunch.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 launchCommandMenu();
             }
@@ -581,7 +591,6 @@ public class Statics extends AbstractConfigurable
         toolbar.add(commandLaunch);
         instructions = new JButton("Scenario Notes");
         instructions.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 displayInstructions();
             }
@@ -594,7 +603,6 @@ public class Statics extends AbstractConfigurable
         if (GameModule.getGameModule().getArchiveWriter() != null) {
             piecesLaunch = new JButton("Piece Definitions");
             piecesLaunch.addActionListener(new ActionListener() {
-
                 public void actionPerformed(ActionEvent e) {
                     piecesProcess();
                 }
@@ -606,7 +614,6 @@ public class Statics extends AbstractConfigurable
             piecesWindow.setTitle("Piece definitions");
             piecesWindow.setSize(700, 500);
             piecesWindow.addWindowListener(new WindowAdapter() {
-
                 @Override
                 public void windowClosing(WindowEvent e) {
                     piecesWindow.setVisible(false);
@@ -615,7 +622,6 @@ public class Statics extends AbstractConfigurable
             piecesWindow.add(new PieceProcessor());
             textLaunch = new JButton("Read Scenario from Text File");
             textLaunch.addActionListener(new ActionListener() {
-
                 public void actionPerformed(ActionEvent e) {
                     readTextFile();
                 }
@@ -625,7 +631,6 @@ public class Statics extends AbstractConfigurable
             toolbar.add(textLaunch);
             checkOrder = new JButton("Check Layers/Mask Order");
             checkOrder.addActionListener(new ActionListener() {
-
                 public void actionPerformed(ActionEvent e) {
                     checkLayerOrders();
                 }
@@ -744,7 +749,6 @@ public class Statics extends AbstractConfigurable
                     if (theCommanders[j].sidesCommanded[i]) {
                         mi = new JMenuItem(theCommanders[j].name);
                         mi.addActionListener(new ActionListener() {
-
                             public void actionPerformed(ActionEvent e) {
                             }
                         });
@@ -758,7 +762,6 @@ public class Statics extends AbstractConfigurable
                 final int m = i;
                 mi = new JMenuItem("Resign from " + theSides[i].name + " side");
                 mi.addActionListener(new ActionListener() {
-
                     public void actionPerformed(ActionEvent e) {
                         resignSide(m);
                     }
@@ -779,7 +782,6 @@ public class Statics extends AbstractConfigurable
                             mi = new JMenuItem(theCommanders[j].name);
                             final int p = j;
                             mi.addActionListener(new ActionListener() {
-
                                 public void actionPerformed(ActionEvent e) {
                                     acceptSide(m, p);
                                 }
@@ -788,7 +790,6 @@ public class Statics extends AbstractConfigurable
                             app.add(mi);
                             mi = new JMenuItem(theCommanders[j].name);
                             mi.addActionListener(new ActionListener() {
-
                                 public void actionPerformed(ActionEvent e) {
                                     rejectSide(m, p);
                                 }
@@ -805,7 +806,6 @@ public class Statics extends AbstractConfigurable
                 if (k != 0) {
                     mi = new JMenuItem("Join " + theSides[i].name + " side");
                     mi.addActionListener(new ActionListener() {
-
                         public void actionPerformed(ActionEvent e) {
                             joinSide(m);
                         }
@@ -815,7 +815,6 @@ public class Statics extends AbstractConfigurable
                 } else {
                     mi = new JMenuItem("Command " + theSides[i].name + " side");
                     mi.addActionListener(new ActionListener() {
-
                         public void actionPerformed(ActionEvent e) {
                             commandSide(m);
                         }
@@ -825,34 +824,30 @@ public class Statics extends AbstractConfigurable
                 }
             }
         }
-        if (curCommander.sidesCommanded[0] || curCommander.sidesCommanded[1]) {
-            for (i = 0; i < 2; i++) {
-                final int m = i;
-                mi = new JMenuItem((showPZs[i] ? "Hide " : "Show ") + theSides[i].name + " PZs");
-                mi.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        displayPZs(m);
-                    }
-                });
-                mi.setEnabled(true);
-                theMenu.add(mi);
-                mi = new JMenuItem((showZOCs[i] ? "Hide " : "Show ") + theSides[i].name + " ZOCs");
-                mi.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        displayZOCs(m);
-                    }
-                });
-                mi.setEnabled(true);
-                theMenu.add(mi);
-            }
+        for (i = 0; i < 2; i++) {
+            final int m = i;
+            mi = new JMenuItem((showPZs[i] ? "Hide " : "Show ") + theSides[i].name + " PZs");
+            mi.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    displayPZs(m);
+                }
+            });
+            mi.setEnabled(true);
+            theMenu.add(mi);
+            mi = new JMenuItem((showZOCs[i] ? "Hide " : "Show ") + theSides[i].name + " ZOCs");
+            mi.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    displayZOCs(m);
+                }
+            });
+            mi.setEnabled(true);
+            theMenu.add(mi);
         }
         theMenu.getPopupMenu().show(commandLaunch, 0, commandLaunch.getHeight());
     }
-    
+
     /**
      * Flip display of PZs
      */
@@ -909,7 +904,7 @@ public class Statics extends AbstractConfigurable
      */
     public String[] getAttributeDescriptions() {
         return new String[]{"Name of first side", "Name of second side",
-        "OCS Module"};
+                            "OCS Module"};
     }
 
     public Class<?>[] getAttributeTypes() {
@@ -920,15 +915,15 @@ public class Statics extends AbstractConfigurable
 
         public Configurer getConfigurer(AutoConfigurable c, String key, String name) {
             return new StringEnumConfigurer(key, name, new String[]{
-                        "Baltic Gap",
-                        "Case Blue",
-                        "DAK",
-                        "Korea",
-                        "Tunisia",
-                        "Hube's Pocket",
-                        "Sicily",
-                        "Burma"
-                    });
+                    "Baltic Gap",
+                    "Case Blue",
+                    "DAK",
+                    "Korea",
+                    "Tunisia",
+                    "Hube's Pocket",
+                    "Sicily",
+                    "Burma"
+                });
         }
     }
 
@@ -938,7 +933,7 @@ public class Statics extends AbstractConfigurable
     public String[] getAttributeNames() {
         return new String[]{"FIRST", "SECOND", "MODULE"};
     }
-    
+
     public void setAttribute(String key, Object value) {
         if (value instanceof String) {
             String s = (String) value;
@@ -953,9 +948,9 @@ public class Statics extends AbstractConfigurable
             } else if (key.equals("DAK")) {
                 if (Boolean.valueOf(s)) module = DAK;
             } else if (key.equals("K")) {
-                if(Boolean.valueOf(s)) module = Korea;
+                if (Boolean.valueOf(s)) module = Korea;
             } else if (key.equals("T")) {
-                if(Boolean.valueOf(s)) module = Tunisia;
+                if (Boolean.valueOf(s)) module = Tunisia;
             } else if (key.equals("MODULE")) {
                 if (value.equals("Baltic Gap")) {
                     module = BalticGap;
@@ -1014,6 +1009,7 @@ public class Statics extends AbstractConfigurable
      */
     /**
      * Create all the objects which are going to hang off the task bar here.
+     *
      * @param parent
      */
     public void addTo(Buildable parent) {
@@ -1032,57 +1028,55 @@ public class Statics extends AbstractConfigurable
          * Create the preferences in case they don't exist
          */
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new BooleanConfigurer(HIDDEN_MOVEMENT_OFF,
-                "OCS - Disable all Fog Of War", Boolean.FALSE));
+            Resources.getString("Prefs.general_tab"),
+            new BooleanConfigurer(HIDDEN_MOVEMENT_OFF,
+                                  "OCS - Disable all Fog Of War", Boolean.FALSE));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new StringEnumConfigurer(ZONE_SECURITY,
-                "OCS - Display of pieces in off-map boxes",
-                new String[]{"Visible", "Masked", "Invisible"}));
+            Resources.getString("Prefs.general_tab"),
+            new StringEnumConfigurer(ZONE_SECURITY,
+                                     "OCS - Display of pieces in off-map boxes",
+                                     new String[]{"Visible", "Masked", "Invisible"}));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new BooleanConfigurer(RANGE_IN_USE,
-                "OCS - Enable range based extra Fog Of War", Boolean.FALSE));
+            Resources.getString("Prefs.general_tab"),
+            new BooleanConfigurer(RANGE_IN_USE,
+                                  "OCS - Enable range based extra Fog Of War", Boolean.FALSE));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new IntConfigurer(RANGE_AIR_HIDDEN,
-                "OCS - Range at which air units become invisible", new Integer(40)));
+            Resources.getString("Prefs.general_tab"),
+            new IntConfigurer(RANGE_AIR_HIDDEN,
+                              "OCS - Range at which air units become invisible", new Integer(40)));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new IntConfigurer(RANGE_HIDDEN,
-                "OCS - Range at which land/sea units become invisible", new Integer(20)));
+            Resources.getString("Prefs.general_tab"),
+            new IntConfigurer(RANGE_HIDDEN,
+                              "OCS - Range at which land/sea units become invisible", new Integer(20)));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new IntConfigurer(RANGE_CONCEALED,
-                "OCS - Range at which units become masked", new Integer(10)));
+            Resources.getString("Prefs.general_tab"),
+            new IntConfigurer(RANGE_CONCEALED,
+                              "OCS - Range at which units become masked", new Integer(10)));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new IntConfigurer(RANGE_FLAT,
-                "OCS - Range at which stacks are shown as a single counter", new Integer(5)));
+            Resources.getString("Prefs.general_tab"),
+            new IntConfigurer(RANGE_FLAT,
+                              "OCS - Range at which stacks are shown as a single counter", new Integer(5)));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new BooleanConfigurer(USE_FORMATIONS,
-                "OCS - Enable Formation Markers as in 13.7", Boolean.FALSE));
+            Resources.getString("Prefs.general_tab"),
+            new BooleanConfigurer(USE_FORMATIONS,
+                                  "OCS - Enable Formation Markers as in 13.7", Boolean.FALSE));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new BooleanConfigurer(HEX_RANGES,
-                "OCS - Range Options use hexes rather than radii", Boolean.FALSE));
+            Resources.getString("Prefs.general_tab"),
+            new BooleanConfigurer(HEX_RANGES,
+                                  "OCS - Range Options use hexes rather than radii", Boolean.FALSE));
         GameModule.getGameModule().getPrefs().addOption(
-                Resources.getString("Prefs.general_tab"),
-                new BooleanConfigurer(USE_NEAREST_AEP,
-                "OCS - Use nearest AEP (rather than minimal distance)", Boolean.FALSE));
+            Resources.getString("Prefs.general_tab"),
+            new BooleanConfigurer(USE_NEAREST_AEP,
+                                  "OCS - Use nearest AEP (rather than minimal distance)", Boolean.FALSE));
         /*
          * Listen for chnages to user name / password
          */
         GameModule.getGameModule().getPrefs().getOption(GameModule.REAL_NAME).addPropertyChangeListener(new PropertyChangeListener() {
-
             public void propertyChange(PropertyChangeEvent e) {
                 userIdChanged();
             }
         });
         GameModule.getGameModule().getPrefs().getOption(GameModule.SECRET_NAME).addPropertyChangeListener(new PropertyChangeListener() {
-
             public void propertyChange(PropertyChangeEvent e) {
                 userIdChanged();
             }
@@ -1120,7 +1114,7 @@ public class Statics extends AbstractConfigurable
     public final static String RANGE_HIDDEN = "OCS-rangehide";
     public final static String RANGE_CONCEALED = "OCS-rangeconceal";
     public final static String RANGE_FLAT = "OCS-rangeFlat";
-    public final static String USE_NEAREST_AEP="OCS-usenearestaep";
+    public final static String USE_NEAREST_AEP = "OCS-usenearestaep";
     public final static String USE_FORMATIONS = "OCS-useformations";
     public final static String HEX_RANGES = "OCS-usehexranges";
 
@@ -1143,7 +1137,9 @@ public class Statics extends AbstractConfigurable
      */
     /**
      * Notify the GameComponent that a game has started/ended
-     * @param gameStarting if true, a game is starting.  If false, then a game is ending
+     *
+     * @param gameStarting if true, a game is starting. If false, then a game is
+     * ending
      */
     public void setup(boolean gameStarting) {
         hexZones = null;
@@ -1153,13 +1149,13 @@ public class Statics extends AbstractConfigurable
              * about to be loaded then these will be overridden from the save file
              */
             hiddenMovementOff = Boolean.TRUE.equals(
-                    GameModule.getGameModule().getPrefs().getValue(HIDDEN_MOVEMENT_OFF));
+                GameModule.getGameModule().getPrefs().getValue(HIDDEN_MOVEMENT_OFF));
             rangeInUse = Boolean.TRUE.equals(
-                    GameModule.getGameModule().getPrefs().getValue(RANGE_IN_USE));
+                GameModule.getGameModule().getPrefs().getValue(RANGE_IN_USE));
             useFormations = Boolean.TRUE.equals(
-                    GameModule.getGameModule().getPrefs().getValue(USE_FORMATIONS));
+                GameModule.getGameModule().getPrefs().getValue(USE_FORMATIONS));
             hexRanges = Boolean.TRUE.equals(
-                    GameModule.getGameModule().getPrefs().getValue(HEX_RANGES));
+                GameModule.getGameModule().getPrefs().getValue(HEX_RANGES));
             Object o = GameModule.getGameModule().getPrefs().getValue(ZONE_SECURITY);
             if (o instanceof String) {
                 String a = ((String) o);
@@ -1193,7 +1189,7 @@ public class Statics extends AbstractConfigurable
                 rangeFlattened = convertHexesToPixels(hexRangeFlattened);
             }
             useNearest = Boolean.TRUE.equals(
-                    GameModule.getGameModule().getPrefs().getValue(USE_NEAREST_AEP));
+                GameModule.getGameModule().getPrefs().getValue(USE_NEAREST_AEP));
             curCommander = null;
             theSides[0].controlled = false;
             theSides[1].controlled = false;
@@ -1215,15 +1211,15 @@ public class Statics extends AbstractConfigurable
      * Read the current value of the preference
      */
     static void readUseNearest() {
-            useNearest = Boolean.TRUE.equals(
-                    GameModule.getGameModule().getPrefs().getValue(USE_NEAREST_AEP));
+        useNearest = Boolean.TRUE.equals(
+            GameModule.getGameModule().getPrefs().getValue(USE_NEAREST_AEP));
     }
 
     /**
      * When saving a game, each GameComponent should return a {@link
-     * Command} that, when executed, restores the GameComponent to its
-     * state when the game was saved
-     * If this component has no persistent state, return null
+     * Command} that, when executed, restores the GameComponent to its state
+     * when the game was saved If this component has no persistent state, return
+     * null
      */
     public Command getRestoreCommand() {
         if (GameModule.getGameModule().getArchiveWriter() != null) {
@@ -1245,19 +1241,19 @@ public class Statics extends AbstractConfigurable
 
     public String encode(Command c) {
         if (c instanceof MapOverride.RestoreRestrict) {
-            MapOverride.RestoreRestrict d = (MapOverride.RestoreRestrict)c;
+            MapOverride.RestoreRestrict d = (MapOverride.RestoreRestrict) c;
             SequenceEncoder se = new SequenceEncoder('\t');
             d.appendTo(se);
             return OCS_VIEWS + se.getValue();
         }
         if (c instanceof MapOverride.NewRestrict) {
-            MapOverride.NewRestrict d = (MapOverride.NewRestrict)c;
+            MapOverride.NewRestrict d = (MapOverride.NewRestrict) c;
             SequenceEncoder se = new SequenceEncoder('\t');
             d.appendTo(se);
             return OCS_NEW_VIEW + se.getValue();
         }
         if (c instanceof MapOverride.MovedRestrict) {
-            MapOverride.MovedRestrict d = (MapOverride.MovedRestrict)c;
+            MapOverride.MovedRestrict d = (MapOverride.MovedRestrict) c;
             SequenceEncoder se = new SequenceEncoder('\t');
             d.appendTo(se);
             return OCS_MVD_VIEW + se.getValue();
@@ -1345,21 +1341,21 @@ public class Statics extends AbstractConfigurable
             String m = st.nextToken();
             Map n = Map.getMapById(m);
             if (n == null) return null;
-            return ((MapOverride)n).createRestoreRestrict(st);
+            return ((MapOverride) n).createRestoreRestrict(st);
         }
         if (command.startsWith(OCS_NEW_VIEW)) {
             SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(command, '\t');
             st.nextToken();
             String m = st.nextToken();
             Map n = Map.getMapById(m);
-            return ((MapOverride)n).createNewRestrict(st);
+            return ((MapOverride) n).createNewRestrict(st);
         }
         if (command.startsWith(OCS_MVD_VIEW)) {
             SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(command, '\t');
             st.nextToken();
             String m = st.nextToken();
             Map n = Map.getMapById(m);
-            return ((MapOverride)n).createMovedRestrict(st);
+            return ((MapOverride) n).createMovedRestrict(st);
         }
         if (command.startsWith(OCS_BOARD)) {
             SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(command, '\t');
@@ -1383,9 +1379,9 @@ public class Statics extends AbstractConfigurable
             SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(command, '\t');
             st.nextToken();
             RestoreStaticsCommand c = new RestoreStaticsCommand(st.nextBoolean(false),
-                    st.nextBoolean(false), st.nextInt(OcsCounter.VISIBLE),
-                    st.nextInt(40),
-                    st.nextInt(20), st.nextInt(10), st.nextInt(5), st.nextInt(0));
+                                                                st.nextBoolean(false), st.nextInt(OcsCounter.VISIBLE),
+                                                                st.nextInt(40),
+                                                                st.nextInt(20), st.nextInt(10), st.nextInt(5), st.nextInt(0));
             for (int i = 0; i < c.theCommanders.length; i++) {
                 c.theCommanders[i] = new Commander(st.nextToken(), st.nextToken());
                 c.theCommanders[i].sidesCommanded[0] = st.nextBoolean(false);
@@ -1425,7 +1421,7 @@ public class Statics extends AbstractConfigurable
             SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(command, '\t');
             st.nextToken();
             return new CommanderCommand(st.nextToken(), st.nextToken(),
-                    st.nextInt(-1), st.nextInt(0), st.nextBoolean(false));
+                                        st.nextInt(-1), st.nextInt(0), st.nextBoolean(false));
         }
         if (command.startsWith(PlayerRoster.COMMAND_PREFIX)) {
             SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(command, '\t');
@@ -1480,18 +1476,18 @@ public class Statics extends AbstractConfigurable
         int i;
         for (i = 0; i < theCommanders.length; i++) {
             if (theCommanders[i].name.equals(nam)
-                    && theCommanders[i].password.equals(password)) {
+                && theCommanders[i].password.equals(password)) {
                 theSides[0].controlled = theCommanders[i].sidesCommanded[0];
                 theSides[1].controlled = theCommanders[i].sidesCommanded[1];
                 curCommander = theCommanders[i];
                 for (int j = 0; j < 2; j++) {
                     if (curCommander.sidesRejected[j]) {
                         GameModule.getGameModule().getChatter().show("Sorry but you have been rejected by the "
-                                + theSides[j].name + " side");
+                                                                     + theSides[j].name + " side");
                         curCommander.sidesRejected[j] = false;
                     } else if (curCommander.sidesAccepted[j]) {
                         GameModule.getGameModule().getChatter().show("You have successfully joined the "
-                                + theSides[j].name + " side");
+                                                                     + theSides[j].name + " side");
                         curCommander.sidesAccepted[j] = false;
                     }
                 }
@@ -1515,7 +1511,6 @@ public class Statics extends AbstractConfigurable
         Statics.check++;
         theMap.repaint();
     }
-
     /**
      * List of hex zones on the current map
      */

@@ -41,7 +41,6 @@ public class ScenarioBuilder extends Launcher {
         load = new File(args[1]);
         text = new File(args[2]);
         save = new File(args[3]);
-        System.out.println("Arguments " + args[0] + "," + args[1] + "," + args[2] + "," + args[3]);
         new ScenarioBuilder(new String[]{args[0], "--standalone"});
     }
 
@@ -56,29 +55,22 @@ public class ScenarioBuilder extends Launcher {
 
     protected void launch()
             throws IOException {
-        System.out.println("Starting load= " + load + ", text = " + text + ", save = " + save);
         new IconFactory(); // initialsie the icon factory
         final ArchiveWriter archive = new ArchiveWriter(new ZipFile(
                 lr.module.getPath()));
-        System.out.println("Loading module...");
         GameModule.init(new BasicModule(archive));
-        System.out.println("Loading saved game...");
         Command c = GameModule.getGameModule().getGameState().decodeSavedGame(
                 load);
         c.execute();
         Statics.readingTextFile = true;
-        System.out.println("Loading text file...");
         ParseText p = new ParseText(text);
-        System.out.println("Parsing text file...");
         p.parse();
         Statics.readingTextFile = false;
         try {
-            System.out.println("Saving scenario...");
             GameModule.getGameModule().getGameState().saveGame(save);
         } catch (IOException e) {
         }
 
-        System.out.println("Done");
         System.exit(0);
     }
 

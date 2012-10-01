@@ -23,10 +23,7 @@
 
 package net.cantab.hayward.george.OCS.Counters;
 
-import VASSAL.counters.AreaOfEffect;
-import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
-import com.sun.org.apache.bcel.internal.classfile.InnerClass;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;

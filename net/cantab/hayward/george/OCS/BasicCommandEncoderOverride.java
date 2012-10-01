@@ -85,6 +85,12 @@ public class BasicCommandEncoderOverride extends BasicCommandEncoder {
                 return new Aircraft(type, inner);
             }
         });
+        decoratorFactoriesa.put(Fighter.ID, new DecoratorFactory() {
+
+            public Decorator createDecorator(String type, GamePiece inner) {
+                return new Fighter(type, inner);
+            }
+        });
         decoratorFactoriesa.put(Aircraft.oldID, new DecoratorFactory() {
 
             @Override
