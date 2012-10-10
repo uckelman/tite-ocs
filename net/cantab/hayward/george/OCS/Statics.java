@@ -124,6 +124,7 @@ public class Statics extends AbstractConfigurable
     final static int Hubes = 6;
     final static int Sicily = 7;
     final static int Burma = 8;
+    final static int TBL=9;
 
     /**
      * Returns true if game is Baltic Gap
@@ -180,6 +181,15 @@ public class Statics extends AbstractConfigurable
     public boolean isBurma() {
         return module == Burma;
     }
+    
+    /**
+     * True if this game is The Blitzkrieg Legend
+     */
+    
+    public boolean isBlitzkriegLegend() {
+        return module == TBL;
+    }
+    
     /**
      * An array of all the piece definitions used in the module
      */
@@ -922,7 +932,8 @@ public class Statics extends AbstractConfigurable
                     "Tunisia",
                     "Hube's Pocket",
                     "Sicily",
-                    "Burma"
+                    "Burma",
+                    "The Blitzkrieg Legend"
                 });
         }
     }
@@ -968,6 +979,8 @@ public class Statics extends AbstractConfigurable
                     module = Sicily;
                 } else if (value.equals("Burma")) {
                     module = Burma;
+                } else if (value.equals("The Blizkrieg Legend")) {
+                    module = TBL;
                 } else {
                     module = BalticGap;
                 }
@@ -999,6 +1012,8 @@ public class Statics extends AbstractConfigurable
                 return "Sicily";
             case Burma:
                 return "Burma";
+            case TBL:
+                return "The Blitzkrieg Legend";
             }
         }
         return null;
