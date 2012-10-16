@@ -276,10 +276,10 @@ public class PieceProcessor extends JPanel {
      */
     void buildPiecePtrs() {
         List<PieceSlot> t = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
+        thePieces = new PiecePtr[t.size()];
         if (t.size() == 0) {
             return;
         }
-        thePieces = new PiecePtr[t.size()];
         int i = 0;
         for (PieceSlot q : t) {
             GamePiece p = PieceCloner.getInstance().clonePiece(q.getPiece());

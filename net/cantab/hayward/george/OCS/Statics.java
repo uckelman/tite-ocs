@@ -979,7 +979,7 @@ public class Statics extends AbstractConfigurable
                     module = Sicily;
                 } else if (value.equals("Burma")) {
                     module = Burma;
-                } else if (value.equals("The Blizkrieg Legend")) {
+                } else if (value.equals("The Blitzkrieg Legend")) {
                     module = TBL;
                 } else {
                     module = BalticGap;
