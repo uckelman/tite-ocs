@@ -20,7 +20,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.cantab.hayward.george.OCS;
 
 import VASSAL.build.module.map.boardPicker.Board;
@@ -62,19 +61,18 @@ import net.cantab.hayward.george.OCS.Counters.Transport;
 import net.cantab.hayward.george.OCS.Counters.Under;
 import net.cantab.hayward.george.OCS.Counters.Unit;
 
-
 /**
  *
  * @author George Hayward
  */
 public class StackOverride extends Stack {
-    
+
     public StackOverride() {
         super();
         Statics.check++;
     }
 
-    public StackOverride( GamePiece p ) {
+    public StackOverride(GamePiece p) {
         super(p);
         Statics.check++;
     }
@@ -111,7 +109,6 @@ public class StackOverride extends Stack {
         super.insert(p, pos);
         Statics.check++;
     }
-
     /**
      * When the last check was made. This is compared to the value held within
      * Statics to determinhe if the check is still valid.
@@ -119,14 +116,14 @@ public class StackOverride extends Stack {
     int lastCheck = 0;
 
     /**
-     * For Baltic Gap on the main map replace any cards drawn from the
-     * garrison pool by the correct piece
+     * For Baltic Gap on the main map replace any cards drawn from the garrison
+     * pool by the correct piece
      */
     void replaceCards() {
         if (map != Statics.theMap) return;
-        for (int i = 0; i < pieceCount; i++ ) {
+        for (int i = 0; i < pieceCount; i++) {
             if (contents[i] instanceof ReplaceCard) {
-                contents[i].keyEvent( KeyStroke.getKeyStroke('R', InputEvent.CTRL_DOWN_MASK));
+                contents[i].keyEvent(KeyStroke.getKeyStroke('R', InputEvent.CTRL_DOWN_MASK));
                 replaceCards();
                 break;
             }
@@ -139,7 +136,7 @@ public class StackOverride extends Stack {
     void makeAllAccessible() {
         for (GamePiece p : contents) {
             if (p instanceof OcsCounter) {
-                ((OcsCounter)p).setSecurity(OcsCounter.CHANGE);
+                ((OcsCounter) p).setSecurity(OcsCounter.CHANGE);
             }
         }
     }
@@ -161,19 +158,19 @@ public class StackOverride extends Stack {
     }
 
     /**
-     * Determine if the given unit is an attack capable unit in COMBAT MODE. First
-     * Embellishment nearest the BasicPiece is found which determines which
-     * side of the piece is shown. For Dak, Tunisia, Baltic Gap and Korea this is
-     * active if the unit is in MOVE MODE. For Case Blue it is always active with
-     * the value being non-zero for MOVE MODE.
+     * Determine if the given unit is an attack capable unit in COMBAT MODE.
+     * First Embellishment nearest the BasicPiece is found which determines
+     * which side of the piece is shown. For Dak, Tunisia, Baltic Gap and Korea
+     * this is active if the unit is in MOVE MODE. For Case Blue it is always
+     * active with the value being non-zero for MOVE MODE.
      */
     boolean isCombatModeAttackCapable(Land u) {
         if (!(u instanceof AttackCapable)) return false;
-        Embellishment e= null;
+        Embellishment e = null;
         GamePiece p;
-        for (p = u; p instanceof Decorator; p = ((Decorator)p).getInner()) {
+        for (p = u; p instanceof Decorator; p = ((Decorator) p).getInner()) {
             if (p instanceof Embellishment) {
-                e = (Embellishment)p;
+                e = (Embellishment) p;
             }
         }
         if (e == null) return false;
@@ -187,58 +184,32 @@ public class StackOverride extends Stack {
 
     /**
      * Compute the visibility of all the pieces in a 'stack'. Any Attack Markers
-     * have been resolved before this point.
-     * <p>
-     * There are four security levels:
-     * <p>
-     * {@code HIDDEN} - which means the counter is invisible
-     * <p>
+     * have been resolved before this point. <p> There are four security levels:
+     * <p> {@code HIDDEN} - which means the counter is invisible <p>
      * {@code CONCEALED} - which means the counter is visible but displayed as a
-     * special mask which conceals anything about the piece
-     * <p>
-     * {@code VISIBLE} - which means the piece can be seen but not changed or moved
-     * <p>
-     * {@code CHANGE} - which means the player can move, flip or do anything else with
-     * the counter.
-     * <P>
-     * A piece which can relate to a side either belongs to a side which the
-     * player controls when it is said to be friendly or it doesn't belong to
-     * such a side when it is said to be hostile
-     * <p>
-     * The rules are thus:
-     * <p>
-     * 1) Any Controlled or Unit which is friendly and any Game Marker
-     * becomes {@code CHANGE}
-     *<p>
-     * All Controlled and Units are now considered hostile
-     *<p>
-     * 2) Any Airbase or Hedgehog becomes {@code VISIBLE}
-     *<p>
-     * 3) Any SupplyMarker which is above a hostile transport becomes {@code HIDDEN}
-     *<p>
-     * 4) Other supply markers become {@code HIDDEN} except the lowest which
-     * becomes '{@code sec}'.
-     *<p>
-     * 5) Replacements and Transports become {@code HIDDEN} and '{@code sec}'
-     * respectively except if there is nothing
-     * else {@code VISIBLE} in the stack the top one becomes {@code VISIBLE}
-     *<p>
-     * 6) Aircraft which are above any Airbase becomes {@code VISIBLE} whilst those
-     * below the Airbase become {@code HIDDEN}
-     *<p>
-     * 7) Ships become {@code VISIBLE}
-     *<p>
-     * 8) Leaders become {@code HIDDEN}
-     *<p>
-     * 9) The topmost COMBAT MODE AttackCapable becomes {@code VISIBLE}. If there is
-     * no AttackCapable unit then the topmost Land Unit becomes {@code VISIBLE}. Any
-     * other Land Units become value of '{@code sec}'.
-     *<p>
-     * 10) Any Under Markers become {@code HIDDEN}.
-     *<p>
-     * 11) Any Over Markers or Reserves become {@code HIDDEN} unless they are over
-     * a {@code VISIBLE} hostile Land unit when they become {@code VISIBLE}
-     * <p>
+     * special mask which conceals anything about the piece <p> {@code VISIBLE}
+     * - which means the piece can be seen but not changed or moved <p>
+     * {@code CHANGE} - which means the player can move, flip or do anything
+     * else with the counter. <P> A piece which can relate to a side either
+     * belongs to a side which the player controls when it is said to be
+     * friendly or it doesn't belong to such a side when it is said to be
+     * hostile <p> The rules are thus: <p> 1) Any Controlled or Unit which is
+     * friendly and any Game Marker becomes {@code CHANGE} <p> All Controlled
+     * and Units are now considered hostile <p> 2) Any Airbase or Hedgehog
+     * becomes {@code VISIBLE} <p> 3) Any SupplyMarker which is above a hostile
+     * transport becomes {@code HIDDEN} <p> 4) Other supply markers become
+     * {@code HIDDEN} except the lowest which becomes '{@code sec}'. <p> 5)
+     * Replacements and Transports become {@code HIDDEN} and '{@code sec}'
+     * respectively except if there is nothing else {@code VISIBLE} in the stack
+     * the top one becomes {@code VISIBLE} <p> 6) Aircraft which are above any
+     * Airbase becomes {@code VISIBLE} whilst those below the Airbase become
+     * {@code HIDDEN} <p> 7) Ships become {@code VISIBLE} <p> 8) Leaders become
+     * {@code HIDDEN} <p> 9) The topmost COMBAT MODE AttackCapable becomes
+     * {@code VISIBLE}. If there is no AttackCapable unit then the topmost Land
+     * Unit becomes {@code VISIBLE}. Any other Land Units become value of
+     * '{@code sec}'. <p> 10) Any Under Markers become {@code HIDDEN}. <p> 11)
+     * Any Over Markers or Reserves become {@code HIDDEN} unless they are over a
+     * {@code VISIBLE} hostile Land unit when they become {@code VISIBLE} <p>
      * 12) Any Division Counters are invisible unless the option to use 13.7 is
      * in effect when they take on the most visible attribute of a member of the
      * division below them and all members of the division below them become
@@ -261,14 +232,14 @@ public class StackOverride extends Stack {
          * hostile.
          */
         int i;
-        boolean [] friendly = new boolean[pieceCount];
-        OcsCounter [] pieces = new OcsCounter[pieceCount];
+        boolean[] friendly = new boolean[pieceCount];
+        OcsCounter[] pieces = new OcsCounter[pieceCount];
         for (i = 0; i < pieceCount; i++) {
             if (contents[i] instanceof OcsCounter) {
-                pieces[i] = (OcsCounter)contents[i];
+                pieces[i] = (OcsCounter) contents[i];
                 if (pieces[i] instanceof Controlled || pieces[i] instanceof Unit) {
                     friendly[i] = pieces[i].theSide == -1
-                            || Statics.theSides[pieces[i].theSide].controlled;
+                                  || Statics.theSides[pieces[i].theSide].controlled;
                 } else {
                     // All Markers are friendly to start with
                     friendly[i] = true;
@@ -309,73 +280,62 @@ public class StackOverride extends Stack {
         // True if a division counter has been found
         boolean supplyPresent = false;
         // True if any supply counters have been found
-        for ( i = pieceCount - 1; i >= 0 ; i-- ) {
+        for (i = pieceCount - 1; i >= 0; i--) {
             OcsCounter b = pieces[i]; // For convenience
             // Apply Rule (1)
             if (friendly[i]) {
                 b.setSecurity(OcsCounter.CHANGE);
-            }
-            // Now everything is hostile
+            } // Now everything is hostile
             // Apply rule (2) and note presence of Airbase
             else if (b instanceof Airbase) {
                 base = true;
                 b.setSecurity(OcsCounter.VISIBLE);
             } else if (b instanceof Hedgehog) {
                 b.setSecurity(OcsCounter.VISIBLE);
-            }
-            // Appply rule (6)
+            } // Appply rule (6)
             else if (b instanceof Aircraft) {
-                b.setSecurity(base ? OcsCounter.HIDDEN : OcsCounter.VISIBLE );
-            }
-            // Apply rule (9)
+                b.setSecurity(base ? OcsCounter.HIDDEN : OcsCounter.VISIBLE);
+            } // Apply rule (9)
             else if (b instanceof Land) { //(9)
-                Land c = (Land)b;
+                Land c = (Land) b;
                 // Make the security 'sec' by default. We'll adjust at the end
                 // of the loop when we know which unit to make visible
                 c.setSecurity(sec);
-                if ( fnd == null ) {
+                if (fnd == null) {
                     fnd = c;
                 } else if (!isCombatModeAttackCapable(fnd)
-                        && isCombatModeAttackCapable(c)) {
+                           && isCombatModeAttackCapable(c)) {
                     fnd = c;
                 }
-            }
-            // Apply rule (5). Keep track of topmost replacement or transport
+            } // Apply rule (5). Keep track of topmost replacement or transport
             // in case no Land units in hex. Prefer tansport to replacement
             else if (b instanceof Replacement || b instanceof Transport) {
                 b.setSecurity((b instanceof Transport) ? sec : OcsCounter.HIDDEN);
                 if (topTrans == null
-                        || (b instanceof Transport && topTrans instanceof Replacement)) {
+                    || (b instanceof Transport && topTrans instanceof Replacement)) {
                     topTrans = b;
                 }
-            }
-            // Apply rule (8)
+            } // Apply rule (8)
             else if (b instanceof Leader) {
                 b.setSecurity(OcsCounter.HIDDEN);
-            }
-            // Apply rule (7)
+            } // Apply rule (7)
             else if (b instanceof Ship) {
                 b.setSecurity(OcsCounter.VISIBLE);
-            }
-            // Apply Rule (10)
+            } // Apply Rule (10)
             else if (b instanceof Under) {
                 b.setSecurity(OcsCounter.HIDDEN);
-            }
-            // Apply Rule (11)
+            } // Apply Rule (11)
             else if (b instanceof Over || b instanceof Reserve) {
                 b.setSecurity(OcsCounter.HIDDEN);
-            }
-            // Apply Rule (12) assuming 13.7 not in force
+            } // Apply Rule (12) assuming 13.7 not in force
             else if (b instanceof Division) {
                 b.setSecurity(OcsCounter.HIDDEN);
                 divFound = true;
-            }
-            // Just mark supply counters as sec for now and
+            } // Just mark supply counters as sec for now and
             else if (b instanceof SupplyMarker) {
                 supplyPresent = true;
                 b.setSecurity(sec);
-            }
-            // Should never reach here
+            } // Should never reach here
             else {
                 b.setSecurity(OcsCounter.CHANGE);
             }
@@ -394,15 +354,14 @@ public class StackOverride extends Stack {
          */
         if (supplyPresent && sec == OcsCounter.CONCEALED) {
             boolean supplyFound = false;
-            for ( i = 0; i < pieceCount; i++ ) {
+            for (i = 0; i < pieceCount; i++) {
                 if (friendly[i]) continue;
                 if (pieces[i] instanceof SupplyMarker) {
                     // Apply rule (3)
                     // Notice check if transport is hostile
-                    if (i > 0 && !friendly[i - 1] && pieces[i - 1] instanceof Transport ) {
+                    if (i > 0 && !friendly[i - 1] && pieces[i - 1] instanceof Transport) {
                         pieces[i].setSecurity(OcsCounter.HIDDEN);
-                    } 
-                    // Apply rule (4)
+                    } // Apply rule (4)
                     else {
                         if (supplyFound) {
                             pieces[i].setSecurity(OcsCounter.HIDDEN);
@@ -417,31 +376,31 @@ public class StackOverride extends Stack {
          * Now adjust the security level of any over counters
          */
         boolean overDone = false;
-        for ( i = 0; i < pieceCount; i++ ) { // (11)
-            if ( fnd != null ) {
-                if ( fnd == pieces[i] ) fnd = null;
+        for (i = 0; i < pieceCount; i++) { // (11)
+            if (fnd != null) {
+                if (fnd == pieces[i]) fnd = null;
             } else {
                 if (friendly[i]) continue;
                 OcsCounter b = pieces[i];
-                if ( !(b instanceof Over) && !(b instanceof Reserve)) continue;
+                if (!(b instanceof Over) && !(b instanceof Reserve)) continue;
                 if (!(b instanceof OOS)) {
                     if (overDone) continue;
                     overDone = true;
                 }
-                b.setSecurity (OcsCounter.VISIBLE);
+                b.setSecurity(OcsCounter.VISIBLE);
             }
         }
         /*
          * Now adjust any division markers if that option in play
          */
         if (divFound && Statics.useFormations) {
-            for ( i = pieceCount - 1; i >= 1 ; i-- ) {
+            for (i = pieceCount - 1; i >= 1; i--) {
                 if (friendly[i]) continue;
                 OcsCounter b = pieces[i];
                 if (!(b instanceof Division) || b.division == null) continue;
                 for (int j = i - 1; j >= 0; j--) {
                     if (friendly[j]) continue;
-                    OcsCounter c = ((OcsCounter)contents[j]);
+                    OcsCounter c = ((OcsCounter) contents[j]);
                     if (!(c instanceof Land) || c.division == null) continue;
                     if (c.division.equals(b.division)) {
                         if (c.security == OcsCounter.VISIBLE) {
@@ -459,9 +418,9 @@ public class StackOverride extends Stack {
         /*
          * Now turn on ZOCs for all attack capable units
          */
-        for ( i = pieceCount - 1; i >= 0 ; i-- ) {
+        for (i = pieceCount - 1; i >= 0; i--) {
             if (!(pieces[i] instanceof AttackCapable)) continue;
-            AttackCapable a = (AttackCapable)pieces[i];
+            AttackCapable a = (AttackCapable) pieces[i];
             a.hasZOC = a.security >= OcsCounter.VISIBLE && isCombatModeAttackCapable(a);
         }
         /*
@@ -469,15 +428,43 @@ public class StackOverride extends Stack {
          */
         for (int j = 0; j < 2; j++) {
             boolean fighterFound = false;
-            for ( i = pieceCount - 1; i >= 0 ; i-- ) {
+            for (i = pieceCount - 1; i >= 0; i--) {
                 if (pieces[i].theSide != j) continue;
                 if (pieces[i] instanceof Airbase) {
-                    ((Airbase)pieces[i]).hasPZ = fighterFound;
+                    if (Statics.theStatics.isBlitzkriegLegend() && pieces[i].getName().equals("Flotilla")) {
+                        ((Airbase) pieces[i]).hasPZ = false;
+                        GamePiece[] allPieces = map.getAllPieces();
+                        for (int k = 0; k < allPieces.length; ++k) {
+                            if (!(allPieces[k] instanceof StackOverride))
+                                continue;
+                            if (!((StackOverride)allPieces[k]).hasSpitfire()) continue;
+                            Point pt = allPieces[k].getPosition();
+                            Zone z = map.findZone(new Point(pt));
+                            if (z.getName().equals("England.Active")) {
+                                ((Airbase) pieces[i]).hasPZ = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        ((Airbase) pieces[i]).hasPZ = fighterFound;
+                    }
                 } else if (pieces[i] instanceof Fighter) {
                     fighterFound = true;
                 }
             }
         }
+    }
+    
+    /**
+     * Special function only used within The Blitzkrieg legend. Returns true
+     * if there is a Spitfire in the stack
+     */
+    boolean hasSpitfire() {
+        for (int i = 0; i < pieceCount; i++) {
+            if (!(contents[i] instanceof Fighter)) continue;
+            if (contents[i].getName().equals("Spit.I")) return true;
+        }
+        return false;
     }
 
     /**
@@ -488,35 +475,34 @@ public class StackOverride extends Stack {
         int control = -1;
         for (GamePiece p : contents) {
             if (!(p instanceof Land)) continue;
-            Land b = (Land)p;
+            Land b = (Land) p;
             if (control == -1) {
                 control = b.theSide;
-            }
-            // If hex has both sides in it then do nothing
+            } // If hex has both sides in it then do nothing
             else if (b.theSide != control) return;
         }
         if (control >= 0) {
             for (GamePiece p : contents) {
                 if (!(p instanceof Controlled)) continue;
-                ((Controlled)p).theSide = control;
+                ((Controlled) p).theSide = control;
             }
             return;
         }
         // If no controller check for replacements/transports but only for
         // supply units
         for (GamePiece p : contents) {
-            if (!(p instanceof Transport) && !(p instanceof Replacement)) continue;
-            OcsCounter b = (OcsCounter)p;
+            if (!(p instanceof Transport) && !(p instanceof Replacement))
+                continue;
+            OcsCounter b = (OcsCounter) p;
             if (control == -1) {
                 control = b.theSide;
-            }
-            // If hex has both sides in it then do nothing
+            } // If hex has both sides in it then do nothing
             else if (b.theSide != control) return;
         }
         if (control >= 0) {
             for (GamePiece p : contents) {
                 if (!(p instanceof SupplyMarker)) continue;
-                ((Controlled)p).theSide = control;
+                ((Controlled) p).theSide = control;
             }
         }
     }
@@ -531,7 +517,7 @@ public class StackOverride extends Stack {
         int control = -1;
         for (GamePiece p : contents) {
             if (!(p instanceof OcsCounter)) continue;
-            int j = ((OcsCounter)p).theSide;
+            int j = ((OcsCounter) p).theSide;
             if (j < 0) continue;
             if (control < 0) {
                 control = j;
@@ -544,10 +530,10 @@ public class StackOverride extends Stack {
 
     /**
      * Work out any range effects and return the security of hostile pieces
-     * which are not visible. If the range is so great that the pieces are totally
-     * hidden with the possible exception of aircraft and ships then it applies
-     * the result. This assumes that the stack involved is on the main map
-     * and not inside a {@code Zone}.
+     * which are not visible. If the range is so great that the pieces are
+     * totally hidden with the possible exception of aircraft and ships then it
+     * applies the result. This assumes that the stack involved is on the main
+     * map and not inside a {@code Zone}.
      *
      * @returns the appropriate security level or -1 if it has applied the
      * correct range effects
@@ -557,7 +543,7 @@ public class StackOverride extends Stack {
         int side = sideInHex();
         if (side < 0) {
             return Statics.hexRangeFlattened == 0 ? OcsCounter.HIDDEN
-                    : OcsCounter.CONCEALED;
+                   : OcsCounter.CONCEALED;
         }
         /*
          * First we find the closest hex containing pieces of the other side
@@ -566,7 +552,7 @@ public class StackOverride extends Stack {
          * something (since they have no friendly units) - they see that
          * part of each side an opponent would see.
          */
-        side = ( side == 0 ) ? 1 : 0;
+        side = (side == 0) ? 1 : 0;
         int range = -1;
         MapGrid ranger = null;
         if (Statics.hexRanges) {
@@ -574,7 +560,7 @@ public class StackOverride extends Stack {
             if (b != null) {
                 ranger = b.getGrid();
                 if (ranger != null && ranger instanceof ZonedGrid) {
-                    ZonedGrid z = (ZonedGrid)ranger;
+                    ZonedGrid z = (ZonedGrid) ranger;
                     Point r = new Point(pos);
                     Rectangle s = b.bounds();
                     r.translate(-s.x, -s.y);
@@ -588,25 +574,25 @@ public class StackOverride extends Stack {
             }
             if (ranger == null || !(ranger instanceof HexGrid))
                 return Statics.hexRangeFlattened == 0 ? OcsCounter.HIDDEN
-                        : OcsCounter.CONCEALED;
+                       : OcsCounter.CONCEALED;
         }
         GamePiece[] allPieces = map.getAllPieces();
         for (int i = 0; i < allPieces.length; ++i) {
-            if ( !( allPieces[i] instanceof StackOverride ) ) continue;
-            if ( !((StackOverride)allPieces[i]).isFriendlyTo(side) ) continue;
+            if (!(allPieces[i] instanceof StackOverride)) continue;
+            if (!((StackOverride) allPieces[i]).isFriendlyTo(side)) continue;
             Point pt = allPieces[i].getPosition();
             Zone z = map.findZone(new Point(pt));
-            if (z != null && z instanceof OcsHexZone && ((OcsHexZone)z).theHex != null) {
-                pt = ((OcsHexZone)z).theHex;
+            if (z != null && z instanceof OcsHexZone && ((OcsHexZone) z).theHex != null) {
+                pt = ((OcsHexZone) z).theHex;
             } else if (z != null && !(z.getGrid() instanceof HexGrid)) continue;
-            if ( range < 0 ) {
-                range = Statics.hexRanges ? ranger.range (pos, pt)
-                    : (int)pos.distance( pt );
+            if (range < 0) {
+                range = Statics.hexRanges ? ranger.range(pos, pt)
+                        : (int) pos.distance(pt);
                 continue;
             }
-            int y = Statics.hexRanges ? ranger.range (pos, pt)
-                    : (int)pos.distance( pt );
-            if ( y < range ) {
+            int y = Statics.hexRanges ? ranger.range(pos, pt)
+                    : (int) pos.distance(pt);
+            if (y < range) {
                 range = y;
             }
         }
@@ -615,25 +601,25 @@ public class StackOverride extends Stack {
             applyAirHidden();
             return -1;
         }
-        if ( range > (Statics.hexRanges ? Statics.hexRangeAirHidden
-                : Statics.rangeAirHidden)) {
+        if (range > (Statics.hexRanges ? Statics.hexRangeAirHidden
+                     : Statics.rangeAirHidden)) {
             applyAirHidden();
             return -1;
         }
-        if ( range > (Statics.hexRanges ? Statics.hexRangeHidden
-                : Statics.rangeHidden)) {
+        if (range > (Statics.hexRanges ? Statics.hexRangeHidden
+                     : Statics.rangeHidden)) {
             applyHidden();
             return -1;
         }
-        if ( range > (Statics.hexRanges ? Statics.hexRangeConcealed
-                : Statics.rangeConcealed)) {
+        if (range > (Statics.hexRanges ? Statics.hexRangeConcealed
+                     : Statics.rangeConcealed)) {
             applyConcealed(range > (Statics.hexRanges ? Statics.hexRangeFlattened
-                                                      : Statics.rangeFlattened));
+                                    : Statics.rangeFlattened));
             return -1;
         }
         return (range > (Statics.hexRanges ? Statics.hexRangeFlattened
-                : Statics.rangeFlattened)) ? OcsCounter.HIDDEN
-                                           : OcsCounter.CONCEALED;
+                         : Statics.rangeFlattened)) ? OcsCounter.HIDDEN
+               : OcsCounter.CONCEALED;
     }
 
     /**
@@ -645,11 +631,11 @@ public class StackOverride extends Stack {
      *
      * @return true if it is friendly to that side
      */
-    boolean isFriendlyTo ( int aSide ) {
+    boolean isFriendlyTo(int aSide) {
         int i;
-        for ( i = 0; i < pieceCount; i++ ) {
+        for (i = 0; i < pieceCount; i++) {
             if (!(contents[i] instanceof OcsCounter)) continue;
-            OcsCounter b = ((OcsCounter)contents[i]);
+            OcsCounter b = ((OcsCounter) contents[i]);
             if (b instanceof Aircraft) continue;
             if (b instanceof Ship) continue;
             if (b instanceof Reserve) continue;
@@ -663,41 +649,44 @@ public class StackOverride extends Stack {
     /**
      * Apply Air Hidden Rules to hex. Everything in the hex is hidden except for
      * pieces controlled by the player.
+     *
      * @see #isFriendlyTo
      */
-    void applyAirHidden () {
+    void applyAirHidden() {
         for (GamePiece p : contents) {
             if (!(p instanceof OcsCounter)) continue;
-            if (((OcsCounter)p).theSide == -1
-                    || Statics.theSides[((OcsCounter)p).theSide].controlled) {
-                ((OcsCounter)p).setSecurity(OcsCounter.CHANGE);
+            if (((OcsCounter) p).theSide == -1
+                || Statics.theSides[((OcsCounter) p).theSide].controlled) {
+                ((OcsCounter) p).setSecurity(OcsCounter.CHANGE);
             } else {
-                ((OcsCounter)p).setSecurity(OcsCounter.HIDDEN);
+                ((OcsCounter) p).setSecurity(OcsCounter.HIDDEN);
             }
         }
     }
 
     /**
      * Apply Hidden Rules to hex. Everything is hidden in the hex except for
-     * active aircraft, airbases and ships. Also any pieces controlled by the player.
+     * active aircraft, airbases and ships. Also any pieces controlled by the
+     * player.
+     *
      * @see #isFriendlyTo
      */
     void applyHidden() {
         boolean base = false;
         for (GamePiece p : contents) {
             if (!(p instanceof OcsCounter)) continue;
-            if (((OcsCounter)p).theSide == -1
-                    || Statics.theSides[((OcsCounter)p).theSide].controlled) {
-                ((OcsCounter)p).setSecurity(OcsCounter.CHANGE);
+            if (((OcsCounter) p).theSide == -1
+                || Statics.theSides[((OcsCounter) p).theSide].controlled) {
+                ((OcsCounter) p).setSecurity(OcsCounter.CHANGE);
             } else if (p instanceof Airbase) {
                 base = true;
-                ((OcsCounter)p).setSecurity(OcsCounter.VISIBLE);
+                ((OcsCounter) p).setSecurity(OcsCounter.VISIBLE);
             } else if (p instanceof Ship) {
-                ((OcsCounter)p).setSecurity(OcsCounter.VISIBLE);
+                ((OcsCounter) p).setSecurity(OcsCounter.VISIBLE);
             } else if (!base && p instanceof Aircraft) {
-                ((OcsCounter)p).setSecurity(OcsCounter.VISIBLE);
+                ((OcsCounter) p).setSecurity(OcsCounter.VISIBLE);
             } else {
-                ((OcsCounter)p).setSecurity(OcsCounter.HIDDEN);
+                ((OcsCounter) p).setSecurity(OcsCounter.HIDDEN);
             }
         }
     }
@@ -705,10 +694,10 @@ public class StackOverride extends Stack {
     /**
      * Apply Concealed Rules. This is the same as Hidden rules except that
      * combat units are concealed instead of hidden. Also if beyond flattening
-     * range only the top land unit is concealed the remainder remain hidden.
-     * If option 13.7 is in effect a division marker will become concealed and
-     * all its divisional units below the marker will remain invisible. This
-     * only needs to be done in flattening is not in effect.
+     * range only the top land unit is concealed the remainder remain hidden. If
+     * option 13.7 is in effect a division marker will become concealed and all
+     * its divisional units below the marker will remain invisible. This only
+     * needs to be done in flattening is not in effect.
      */
     void applyConcealed(boolean flat) {
         boolean base = false;
@@ -716,36 +705,38 @@ public class StackOverride extends Stack {
         boolean noDiv = true;
         for (GamePiece p : contents) {
             if (!(p instanceof OcsCounter)) continue;
-            if (((OcsCounter)p).theSide == -1
-                    || Statics.theSides[((OcsCounter)p).theSide].controlled) {
-                ((OcsCounter)p).setSecurity(OcsCounter.CHANGE);
+            if (((OcsCounter) p).theSide == -1
+                || Statics.theSides[((OcsCounter) p).theSide].controlled) {
+                ((OcsCounter) p).setSecurity(OcsCounter.CHANGE);
             } else if (p instanceof Airbase) {
                 base = true;
-                ((OcsCounter)p).setSecurity(OcsCounter.VISIBLE);
+                ((OcsCounter) p).setSecurity(OcsCounter.VISIBLE);
             } else if (p instanceof Ship) {
-                ((OcsCounter)p).setSecurity(OcsCounter.VISIBLE);
+                ((OcsCounter) p).setSecurity(OcsCounter.VISIBLE);
             } else if (!base && p instanceof Aircraft) {
-                ((OcsCounter)p).setSecurity(OcsCounter.VISIBLE);
+                ((OcsCounter) p).setSecurity(OcsCounter.VISIBLE);
             } else if ((!flat || !topped) && p instanceof Land) {
                 topped = true;
-                ((OcsCounter)p).setSecurity(OcsCounter.CONCEALED);
+                ((OcsCounter) p).setSecurity(OcsCounter.CONCEALED);
             } else if (p instanceof Division) {
                 noDiv = false;
-                ((OcsCounter)p).setSecurity(OcsCounter.HIDDEN);
+                ((OcsCounter) p).setSecurity(OcsCounter.HIDDEN);
             } else {
-                ((OcsCounter)p).setSecurity(OcsCounter.HIDDEN);
+                ((OcsCounter) p).setSecurity(OcsCounter.HIDDEN);
             }
         }
         if (flat || noDiv) return;
         for (int i = 0; i < pieceCount; i++) {
             if (!(contents[i] instanceof OcsCounter)) continue;
-            OcsCounter p = (OcsCounter)contents[i];
-            if (p.theSide == -1 || Statics.theSides[p.theSide].controlled) continue;
+            OcsCounter p = (OcsCounter) contents[i];
+            if (p.theSide == -1 || Statics.theSides[p.theSide].controlled)
+                continue;
             if (!(p instanceof Division)) continue;
             for (int j = i - 1; j >= 0; j++) {
                 if (!(contents[i] instanceof Land)) continue;
-                Land q = (Land)contents[i];
-                if (q.theSide == -1 || Statics.theSides[q.theSide].controlled) continue;
+                Land q = (Land) contents[i];
+                if (q.theSide == -1 || Statics.theSides[q.theSide].controlled)
+                    continue;
                 if (q.division != null && q.division.equals(p.division)) {
                     p.setSecurity(OcsCounter.CONCEALED);
                     q.setSecurity(OcsCounter.HIDDEN);
@@ -789,12 +780,11 @@ public class StackOverride extends Stack {
      * Calculate visibility for a hex zone. This is done by arranging the pieces
      * in the zone and in the hex the zone represents into a single stack and
      * then applying the normal rules as though that stack was in the hex of the
-     * zone.
-     * <p>
-     * This is done by collecting all the stacks within the hex zone and sorting
-     * them into order on basis of left to right within top to bottom and then
-     * adding the stack in the hex if any on top. A fake stack is created from
-     * these stacks and is used to do the visibility calculations
+     * zone. <p> This is done by collecting all the stacks within the hex zone
+     * and sorting them into order on basis of left to right within top to
+     * bottom and then adding the stack in the hex if any on top. A fake stack
+     * is created from these stacks and is used to do the visibility
+     * calculations
      */
     void calculateVisibilityHexZone(Zone z, Point p) {
         List<StackOverride> stacks = new ArrayList<StackOverride>();
@@ -802,7 +792,7 @@ public class StackOverride extends Stack {
         GamePiece[] allPieces = map.getAllPieces();
         for (GamePiece q : allPieces) {
             if (!(q instanceof StackOverride)) continue;
-            StackOverride s = (StackOverride)q;
+            StackOverride s = (StackOverride) q;
             if (s.pos.equals(p)) {
                 inHex = s;
                 continue;
@@ -818,7 +808,7 @@ public class StackOverride extends Stack {
         for (StackOverride i : stacks) {
             k += i.pieceCount;
         }
-        if (inHex != null) k+= inHex.pieceCount;
+        if (inHex != null) k += inHex.pieceCount;
         t.contents = new GamePiece[k];
         t.pieceCount = k;
         t.pos = p;
@@ -848,7 +838,6 @@ public class StackOverride extends Stack {
             if (s.pos.x > t.pos.x) return 1;
             return 0;
         }
-
     }
 
     /**
@@ -858,12 +847,12 @@ public class StackOverride extends Stack {
         for (GamePiece p : contents) {
             if (!(p instanceof OcsCounter)) continue;
             if (p instanceof Aircraft || p instanceof Land
-                    || p instanceof Ship) {
-                ((OcsCounter)p).setSecurity(sec);
+                || p instanceof Ship) {
+                ((OcsCounter) p).setSecurity(sec);
             } else if (p instanceof GameMarker) {
-                ((OcsCounter)p).setSecurity(OcsCounter.CHANGE);
+                ((OcsCounter) p).setSecurity(OcsCounter.CHANGE);
             } else {
-                ((OcsCounter)p).setSecurity(OcsCounter.HIDDEN);
+                ((OcsCounter) p).setSecurity(OcsCounter.HIDDEN);
             }
         }
     }
@@ -883,13 +872,13 @@ public class StackOverride extends Stack {
          * for the pieces. If this stack has not been recaclculated since the
          * last move (or whatever) then do the calulation
          */
-        if ( lastCheck > Statics.check ) return;
+        if (lastCheck > Statics.check) return;
         lastCheck = Statics.check + 1;
         /*
          * First see if hidden movement is enabled. If it is not then make
          * every piece accessible.
          */
-        if ( Statics.hiddenMovementOff ) {
+        if (Statics.hiddenMovementOff) {
             makeAllAccessible();
             return;
         }
@@ -901,7 +890,7 @@ public class StackOverride extends Stack {
          * First find out if the stack is in a zone on the main map.
          */
         Zone z = null;
-        if ( map == Statics.theMap ) {
+        if (map == Statics.theMap) {
             z = map.findZone(new Point(this.pos));
             if (z == null) {
                 // Perhaps the stack is in the hex of a hex zone
@@ -912,14 +901,14 @@ public class StackOverride extends Stack {
          * If the zone is a hex zone then calculate its visibility
          */
         if (z instanceof OcsHexZone) {
-            Point p = ((OcsHexZone)z).getHex();
+            Point p = ((OcsHexZone) z).getHex();
             if (p != null) {
                 calculateVisibilityHexZone(z, p);
                 return;
             }
         }
         if (z instanceof OcsSideZone) {
-            int x = ((OcsSideZone)z).getSide();
+            int x = ((OcsSideZone) z).getSide();
             if (x < 0 || Statics.theSides[x].controlled) {
                 makeAllAccessible();
             } else {
@@ -931,24 +920,24 @@ public class StackOverride extends Stack {
          * If it is in an off map window or a non hex grid zone (we assume that
          * just defines a game map) then treat as ordinary hex but not
          */
-        calculateVisibility (map != Statics.theMap || z != null && !(z.getGrid() instanceof HexGrid));
+        calculateVisibility(map != Statics.theMap || z != null && !(z.getGrid() instanceof HexGrid));
     }
 
     /**
-     * Check a  GamePiece being added to see if it is an initial supply marker
+     * Check a GamePiece being added to see if it is an initial supply marker
      * being placed and set its side to that of the one controlled by the player
      */
     void checkPieceAdded(GamePiece p) {
         if (!(p instanceof Controlled)) return;
-        Controlled s = (Controlled)p;
+        Controlled s = (Controlled) p;
         if (s.theSide != -1) return;
         if (Statics.theSides[0].controlled
-                && !Statics.theSides[1].controlled) {
+            && !Statics.theSides[1].controlled) {
             s.theSide = 0;
             return;
         }
         if (!Statics.theSides[0].controlled
-                && Statics.theSides[1].controlled) {
+            && Statics.theSides[1].controlled) {
             s.theSide = 1;
             return;
         }

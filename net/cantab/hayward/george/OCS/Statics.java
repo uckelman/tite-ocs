@@ -91,6 +91,7 @@ import net.cantab.hayward.george.OCS.Counters.Ship;
 import net.cantab.hayward.george.OCS.Counters.SupplyMarker;
 import net.cantab.hayward.george.OCS.Counters.Transport;
 import net.cantab.hayward.george.OCS.Counters.Under;
+import net.cantab.hayward.george.OCS.Parsing.ParsePieces;
 import net.cantab.hayward.george.OCS.Parsing.ParseText;
 import org.apache.commons.io.filefilter.FalseFileFilter;
 
@@ -124,7 +125,7 @@ public class Statics extends AbstractConfigurable
     final static int Hubes = 6;
     final static int Sicily = 7;
     final static int Burma = 8;
-    final static int TBL=9;
+    final static int TBL = 9;
 
     /**
      * Returns true if game is Baltic Gap
@@ -185,11 +186,9 @@ public class Statics extends AbstractConfigurable
     /**
      * True if this game is The Blitzkrieg Legend
      */
-    
     public boolean isBlitzkriegLegend() {
         return module == TBL;
     }
-    
     /**
      * An array of all the piece definitions used in the module
      */
@@ -218,6 +217,10 @@ public class Statics extends AbstractConfigurable
      * Whether to show ZOCs for a side
      */
     public static boolean[] showZOCs = {false, false};
+    /**
+     * Whether to show HQs for a side
+     */
+    public static boolean[] showHQs = {false, false};
     /**
      * A value which is updated whenever a piece is moved. It is used to
      * determine whether the security states of pieces within a stack need to be
@@ -331,6 +334,10 @@ public class Statics extends AbstractConfigurable
      * Check the mask/layers decorators in the right order
      */
     JButton checkOrder;
+    /**
+     * The button to read piece definitions and create pieces
+     */
+    JButton createPieces;
 
     /**
      * Create an object and thus initialise all the static data.
@@ -639,6 +646,16 @@ public class Statics extends AbstractConfigurable
             textLaunch.setFocusable(false);
             textLaunch.setEnabled(false);
             toolbar.add(textLaunch);
+            createPieces = new JButton("Create Pieces from file");
+            createPieces.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    createPiecesFromFile();
+                }
+            });
+            createPieces.setFocusable(false);
+            createPieces.setEnabled(true);
+            toolbar.add(createPieces);
             checkOrder = new JButton("Check Layers/Mask Order");
             checkOrder.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -726,6 +743,21 @@ public class Statics extends AbstractConfigurable
         readingTextFile = false;
 
         instructions.setEnabled(scenarioInstructions != null);
+    }
+
+    /**
+     * Read the piece definitions from a file
+     */
+    public void createPiecesFromFile() {
+        final FileChooser fc = GameModule.getGameModule().getFileChooser();
+        if (fc.showOpenDialog() != FileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File file = fc.getSelectedFile();
+
+        new ParsePieces(file);
+
     }
 
     /**
@@ -854,12 +886,23 @@ public class Statics extends AbstractConfigurable
             });
             mi.setEnabled(true);
             theMenu.add(mi);
+            if (curCommander.sidesCommanded[i]) {
+                mi = new JMenuItem((showHQs[i] ? "Hide " : "Show ") + theSides[i].name + " HQs");
+                mi.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        displayHQs(m);
+        }
+                });
+                mi.setEnabled(true);
+                theMenu.add(mi);
+            }
         }
         theMenu.getPopupMenu().show(commandLaunch, 0, commandLaunch.getHeight());
     }
 
     /**
-     * Flip display of PZs
+     * Flip display of PZs.
      */
     public void displayPZs(int i) {
         showPZs[i] = !showPZs[i];
@@ -867,10 +910,18 @@ public class Statics extends AbstractConfigurable
     }
 
     /**
-     * Flip display of ZOCs
+     * Flip display of ZOCs.
      */
     public void displayZOCs(int i) {
         showZOCs[i] = !showZOCs[i];
+        theMap.repaint();
+    }
+
+    /**
+     * Flip display of HQs.
+     */
+    public void displayHQs(int i) {
+        showHQs[i] = !showHQs[i];
         theMap.repaint();
     }
 

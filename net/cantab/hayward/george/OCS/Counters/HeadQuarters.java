@@ -19,6 +19,13 @@
 package net.cantab.hayward.george.OCS.Counters;
 
 import VASSAL.counters.GamePiece;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import net.cantab.hayward.george.OCS.AreaOfEffectOverride;
+import net.cantab.hayward.george.OCS.Statics;
 
 /**
  * HQ Units
@@ -47,15 +54,42 @@ public class HeadQuarters extends Land {
         this(ID, null);
     }
 
+    AreaOfEffectOverride drawer = new AreaOfEffectOverride(Color.BLUE);
+
     /**
      * Construct an artillery counter from its type string
      * @param type
      */
     public HeadQuarters(String type, GamePiece p ) {
         super(type, p);
+        drawer.setRadius(1);
+    }
+
+    @Override
+    public void setInner(GamePiece p) {
+        super.setInner(p);
+        if (drawer != null) drawer.setInner(p);
     }
 
     public String getDescription() {
         return "HQ Unit";
+    }
+
+    public void draw(Graphics g, int x, int y, Component obs, double zoom) {
+        drawer.setInner(piece);
+        drawer.setActive(theSide < 0 ? false :(Statics.showHQs[theSide]));
+        drawer.draw(g, x, y, obs, zoom);
+}
+    
+    public Rectangle boundingBox() {
+        drawer.setInner(piece);
+        drawer.setActive(theSide < 0 ? false :(Statics.showHQs[theSide]));
+        return drawer.boundingBox();
+    }
+    
+    public Shape getShape() {
+        drawer.setInner(piece);
+        drawer.setActive(theSide < 0 ? false :(Statics.showHQs[theSide]));
+        return drawer.getShape();
     }
 }

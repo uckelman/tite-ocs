@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.cantab.hayward.george.OCS.Parsing;
 
 import VASSAL.build.GameModule;
@@ -36,10 +35,12 @@ public class PieceSearcher {
      * Current active piece reading class
      */
     PieceReader reader;
+
     /**
      * The structure of a piece pointer
      */
     static class PiecePtr {
+
         String name;
         String image;
         String factors;
@@ -47,7 +48,7 @@ public class PieceSearcher {
         OcsCounter piece;
         boolean added;
 
-        PiecePtr () {
+        PiecePtr() {
             name = "";
             image = "";
             factors = "";
@@ -67,15 +68,17 @@ public class PieceSearcher {
      * No Divisional counter to be placed
      */
     boolean noDivCounters = false;
+
     /**
      * Define synonyms between names
      */
     static class Synonym {
-        String [] start;
-        String [] restriction;
-        String [] replace;
 
-        Synonym(String [] a, String [] b, String[] c) {
+        String[] start;
+        String[] restriction;
+        String[] replace;
+
+        Synonym(String[] a, String[] b, String[] c) {
             start = a;
             replace = b;
             restriction = c;
@@ -89,23 +92,27 @@ public class PieceSearcher {
      * Synonyms for unit names
      */
     List<Synonym> unit = new ArrayList<Synonym>();
+
     /**
      * Define a possible terminal string to be matched
      */
     static class Terminal {
-        List<List <String []>> matches = new ArrayList<List <String []>>();
+
+        List<List<String[]>> matches = new ArrayList<List<String[]>>();
     }
     /**
      * Terminals which are dross
      */
     List<Terminal> dross = new ArrayList<Terminal>();
+
     /**
      * Find a matching synonym if any
+     *
      * @param a list to search
      * @param b synonym to match
      * @return the matched value or null if none
      */
-    String [] findMatchingSynonym(List<Synonym> a, String[] b, String[] d) {
+    String[] findMatchingSynonym(List<Synonym> a, String[] b, String[] d) {
         for (Synonym c : a) {
             if (c.start.length != b.length) continue;
             int i;
@@ -113,7 +120,7 @@ public class PieceSearcher {
                 if (!b[i].equalsIgnoreCase(c.start[i])) break;
             }
             if (i < b.length) continue;
-            if ( c.restriction == null) {
+            if (c.restriction == null) {
                 return c.replace;
             }
             if (d == null) continue;
@@ -126,8 +133,10 @@ public class PieceSearcher {
         }
         return null;
     }
+
     /**
      * Remove any matching strings from a string array
+     *
      * @param words string array from which to remove strings
      * @param k where to look for matches
      * @return new array if any match removed else null
@@ -142,7 +151,7 @@ public class PieceSearcher {
             for (m = 0; m < t.matches.size(); m++) {
                 List<String[]> u = t.matches.get(m);
                 for (n = 0; n < u.size(); n++) {
-                    String [] v = u.get(n);
+                    String[] v = u.get(n);
                     if (i + 1 < v.length) continue;
                     for (j = 0; j < v.length; j++) {
                         if (!v[j].equals(words[i + 1 - v.length + j])) {
@@ -159,7 +168,7 @@ public class PieceSearcher {
                 }
             }
             if (m == t.matches.size()) {
-                String [] result = new String[words.length + i - k];
+                String[] result = new String[words.length + i - k];
                 System.arraycopy(words, 0, result, 0, i + 1);
                 if (i < result.length - 1)
                     System.arraycopy(words, k + 1, result, i + 1, result.length - 1 - i);
@@ -168,7 +177,6 @@ public class PieceSearcher {
         }
         return null;
     }
-
 
     PieceSearcher(LineReader a, ModuleSpecific b) {
         data = b;
@@ -227,7 +235,7 @@ public class PieceSearcher {
             thePieces[i].image = front;
             if (!(p instanceof OcsCounter)) {
                 GameModule.getGameModule().getChatter().show("*** Not an OCS Counter "
-                        + pname + " - image = " + front);
+                                                             + pname + " - image = " + front);
                 thePieces[i].piece = null;
             } else {
                 thePieces[i].piece = (OcsCounter) p;
@@ -243,7 +251,7 @@ public class PieceSearcher {
     void setReader(PieceReader pr) {
         reader = pr;
     }
-    
+
     OcsCounter findMarker(String name) {
         return findPiece(-1, null, null, null, new String[]{name}, null, null);
     }
@@ -285,21 +293,21 @@ public class PieceSearcher {
     }
 
     OcsCounter findPiece(int curSide, Class ocsType1, Class ocsType2,
-            String factors, String [] ids, String[] div, String[] type) {
+                         String factors, String[] ids, String[] div, String[] type) {
         String id = null;
         String dName = null;
         String dNameFull = null;
         String altId = null;
         String altId2 = null;
-        String [] origDiv = div;
+        String[] origDiv = div;
         if (div != null) {
-            String [] t = findMatchingSynonym(divs, div, null);
+            String[] t = findMatchingSynonym(divs, div, null);
             if (t != null) {
                 div = t;
             }
             if (t != null && t[0].equals("-")) {
-                String [] newi = new String[ids.length + t.length - 1];
-                System.arraycopy(t, 1, newi, 0, t.length -1);
+                String[] newi = new String[ids.length + t.length - 1];
+                System.arraycopy(t, 1, newi, 0, t.length - 1);
                 System.arraycopy(ids, 0, newi, t.length - 1, ids.length);
                 ids = newi;
                 div = null;
@@ -307,12 +315,12 @@ public class PieceSearcher {
                 if (t != null) ids = t;
             }
             if (ids != null && Statics.theStatics.isDAK()) {
-                t = removeDrossAt(ids, ids.length -1);
+                t = removeDrossAt(ids, ids.length - 1);
                 if (t != null) ids = t;
             }
         }
         if (ids != null) {
-            String [] t = findMatchingSynonym(unit, ids, div);
+            String[] t = findMatchingSynonym(unit, ids, div);
             if (t != null) {
                 if (t[0].charAt(0) == '!') {
                     factors = t[0].substring(1);
@@ -321,7 +329,7 @@ public class PieceSearcher {
                 ids = t;
             }
             if (origDiv != null && Statics.theStatics.isCaseBlue()) {
-                t = removeDrossAt(ids, ids.length -1);
+                t = removeDrossAt(ids, ids.length - 1);
                 if (t != null) {
                     if (t.length != 0) {
                         ids = t;
@@ -341,17 +349,20 @@ public class PieceSearcher {
             }
             if (data.twoStageDivLookup) {
                 if (Statics.theStatics.isDAK() && curSide == 1) {
-                    String [] d = div;
+                    String[] d = div;
                     div = new String[d.length];
                     System.arraycopy(d, 0, div, 0, d.length);
-                    if (div[div.length -1].equals("Division"))
+                    if (div[div.length - 1].equals("Division"))
                         div[div.length - 1] = "Div";
-                    if (div.length == 3  && div[1].equals("Armored")) div[1] = "";
-                    if (div.length == 3  && div[1].equals("Infantry")) div[1] = "";
-                    if (div.length == 3  && div[1].equals("Inf")) div[1] = "";
-                    if (div.length == 3  && div[1].equals("Para")) div[1] = "";
-                    if (div.length == 3  && div[1].equals("Motorized")) div[1] = "";
-                    if (div[0].charAt(div[0].length()-1) == '.') {
+                    if (div.length == 3 && div[1].equals("Armored"))
+                        div[1] = "";
+                    if (div.length == 3 && div[1].equals("Infantry"))
+                        div[1] = "";
+                    if (div.length == 3 && div[1].equals("Inf")) div[1] = "";
+                    if (div.length == 3 && div[1].equals("Para")) div[1] = "";
+                    if (div.length == 3 && div[1].equals("Motorized"))
+                        div[1] = "";
+                    if (div[0].charAt(div[0].length() - 1) == '.') {
                         div[0] = div[0].substring(0, div[0].length() - 1);
                     }
                 }
@@ -370,10 +381,10 @@ public class PieceSearcher {
                             + data.prefixEnd + id;
                     if (div.length > 2) {
                         altId2 = div[0] + data.prefixFill + div[2]
-                                + data.prefixEnd + id;
+                                 + data.prefixEnd + id;
                     }
                 }
-                id = div[0] +data.prefixEnd + id;
+                id = div[0] + data.prefixEnd + id;
             }
             id = data.finalUnitName(curSide, id, dNameFull);
         }
@@ -394,16 +405,18 @@ public class PieceSearcher {
             }
             if (factors != null && !factors.equals(p.factors)) continue;
             if (dName != null && !dName.equals(p.division)) continue;
+            if (dName == null && ocsType1 != Division.class && (p.division == null || !p.division.equals("")))
+                continue;
             if (id == null || p.name.equals(id)
-                    || (altId != null && p.name.equals(altId))
-                    || altId2 != null && p.name.equals(altId2)) {
+                || (altId != null && p.name.equals(altId))
+                || altId2 != null && p.name.equals(altId2)) {
                 matches.add(p);
                 continue;
             }
             if (dName != null && data.postfixDivToUnit) {
                 if (p.name.length() >= dNameFull.length() + id.length()
-                        && p.name.startsWith(id)
-                        && p.name.endsWith(dNameFull)) {
+                    && p.name.startsWith(id)
+                    && p.name.endsWith(dNameFull)) {
                     matches.add(p);
                     continue;
                 }
@@ -415,20 +428,20 @@ public class PieceSearcher {
                 }
             }
             if (p.name.startsWith(id) && p.name.charAt(id.length()) == ' '
-                    || id.startsWith(p.name) && id.charAt(p.name.length()) == ' ') {
+                || id.startsWith(p.name) && id.charAt(p.name.length()) == ' ') {
                 partial.add(p);
                 continue;
             }
             if (altId != null) {
                 if (p.name.startsWith(altId) && p.name.charAt(altId.length()) == ' '
-                        || altId.startsWith(p.name) && altId.charAt(p.name.length()) == ' ') {
+                    || altId.startsWith(p.name) && altId.charAt(p.name.length()) == ' ') {
                     partial.add(p);
                     continue;
                 }
             }
             if (altId2 != null) {
                 if (p.name.startsWith(altId2) && p.name.charAt(altId2.length()) == ' '
-                        || altId2.startsWith(p.name) && altId2.charAt(p.name.length()) == ' ') {
+                    || altId2.startsWith(p.name) && altId2.charAt(p.name.length()) == ' ') {
                     partial.add(p);
                     continue;
                 }
@@ -439,7 +452,7 @@ public class PieceSearcher {
             if (noErrorReport) return null;
             input.writeError(true, "Unable to find matching piece");
             input.writeError(false, id + (factors == null ? "" : (" (" + factors + ")"))
-                    + (dName == null ?  "" : (" in " + dNameFull) ));
+                                    + (dName == null ? "" : (" in " + dNameFull)));
             return null;
         }
         if (matches.size() == 1) {
@@ -448,53 +461,55 @@ public class PieceSearcher {
                 input.writeError(true, "Division counter found instead of unit");
             }
             input.writeError(false, id + (factors == null ? "" : (" (" + factors + ")"))
-                    + (dName == null ?  "" : (" in " + dNameFull) ) + " matched by");
+                                    + (dName == null ? "" : (" in " + dNameFull)) + " matched by");
             input.writeError(false, "Name = " + r.name + " image = " + r.image
-                    + " (" + r.factors + ") " + r.division);
+                                    + " (" + r.factors + ") " + r.division);
             if (r.piece instanceof Division && !r.added && !this.noDivCounters) {
-                reader.addPiece((OcsCounter)PieceCloner.getInstance().clonePiece(r.piece));
+                reader.addPiece((OcsCounter) PieceCloner.getInstance().clonePiece(r.piece));
                 r.added = true;
                 if (Statics.theStatics.isCaseBlue()) {
                     if (r.name.equals("LAH")) {
-                        reader.addPiece(findPiece(curSide, new String[] {"LAH"}, "4-4-3", new String[] {"LAH"}));
+                        reader.addPiece(findPiece(curSide, new String[]{"LAH"}, "4-4-3", new String[]{"LAH"}));
                     }
                 }
             }
-            return (OcsCounter)PieceCloner.getInstance().clonePiece(r.piece);
+            return (OcsCounter) PieceCloner.getInstance().clonePiece(r.piece);
         }
-        int i;
-        for (i = 1; i < matches.size(); i++) {
-            PiecePtr s = matches.get(i - 1);
-            PiecePtr t =matches.get(i);
-            if (!t.name.equals(s.name)) break;
-            if (!t.factors.equals(s.factors)) break;
-            if (!t.division.equals(s.division)) break;
-            if (t.piece.theSide != s.piece.theSide) break;
-        }
-        if (i == matches.size()) {
-            PiecePtr r = matches.get(0);
-            if (r.piece instanceof Division && ocsType1 != Division.class) {
-                input.writeError(true, "Division counter found instead of unit");
+        if (!Statics.theStatics.isBlitzkriegLegend()) {
+            int i;
+            for (i = 1; i < matches.size(); i++) {
+                PiecePtr s = matches.get(i - 1);
+                PiecePtr t = matches.get(i);
+                if (!t.name.equals(s.name)) break;
+                if (!t.factors.equals(s.factors)) break;
+                if (!t.division.equals(s.division)) break;
+                if (t.piece.theSide != s.piece.theSide) break;
             }
-            input.writeError(false, id + (factors == null ? "" : (" (" + factors + ")"))
-                    + (dName == null ?  "" : (" in " + dNameFull) ) + " matched by");
-            input.writeError(false, "Name = " + r.name + " image = " + r.image
-                    + " (" + r.factors + ") " + r.division);
-            return (OcsCounter)PieceCloner.getInstance().clonePiece(r.piece);
+            if (i == matches.size()) {
+                PiecePtr r = matches.get(0);
+                if (r.piece instanceof Division && ocsType1 != Division.class) {
+                    input.writeError(true, "Division counter found instead of unit");
+                }
+                input.writeError(false, id + (factors == null ? "" : (" (" + factors + ")"))
+                                        + (dName == null ? "" : (" in " + dNameFull)) + " matched by");
+                input.writeError(false, "Name = " + r.name + " image = " + r.image
+                                        + " (" + r.factors + ") " + r.division);
+                return (OcsCounter) PieceCloner.getInstance().clonePiece(r.piece);
+            }
         }
         input.writeError(true, "Multiple matching pieces found for Name = " + id
-                    + (factors == null ? "" : (" (" + factors + ")"))
-                    + (dName == null ?  "" : (" in " + dNameFull) ) + ":");
+                               + (factors == null ? "" : (" (" + factors + ")"))
+                               + (dName == null ? "" : (" in " + dNameFull)) + ":");
         for (PiecePtr r : matches) {
             input.writeError(false, "Name = " + r.name + " image = " + r.image
-                    + " (" + r.factors + ") " + r.division);
+                                    + " (" + r.factors + ") " + r.division);
         }
         return null;
     }
 
     public boolean findDivision(int side, String[] div) {
         if (div != null) {
-            String [] t = findMatchingSynonym(divs, div, null);
+            String[] t = findMatchingSynonym(divs, div, null);
             if (t != null) {
                 div = t;
             }
@@ -508,9 +523,9 @@ public class PieceSearcher {
         return false;
     }
 
-    public void addWholeDivision (int curSide, String[] div, PieceReader pr) {
+    public void addWholeDivision(int curSide, String[] div, PieceReader pr) {
         if (div == null) return;
-        String [] t = findMatchingSynonym(divs, div, null);
+        String[] t = findMatchingSynonym(divs, div, null);
         if (t != null) {
             div = t;
         }
@@ -521,12 +536,12 @@ public class PieceSearcher {
             if (p == null) continue;
             if (p.piece == null) continue;
             if (curSide != -1 && p.piece.theSide != curSide) continue;
+            if (p.piece instanceof Division) continue;
             if (q.division.equals(p.division)) {
                 pr.addPiece(p.piece);
                 input.writeError(false, "Added divisional unit: Name = " + p.name + " image = " + p.image
-                    + " (" + p.factors + ") " + p.division);
+                                        + " (" + p.factors + ") " + p.division);
             }
         }
     }
-
 }

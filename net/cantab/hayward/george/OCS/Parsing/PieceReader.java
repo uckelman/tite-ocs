@@ -505,6 +505,15 @@ public abstract class PieceReader {
                 input.writeError(true, "Bad unit in division");
                 return;
             }
+            if (unit.length == 3 && unit[0].equals("all") && unit[2].equals("units") && isNumber(unit[1])) {
+                match.addWholeDivision(curSide, divName, this);
+                return;
+            }
+            if (unit.length == 4 && unit[0].equals("all") && unit[3].equals("units") && unit[2].equals("combat") && 
+                (isNumber(unit[1]) || unit[1].equals("five") || unit[1].equals("nine"))) {
+                match.addWholeDivision(curSide, divName, this);
+                return;
+            }
             int repeat = 1;
             if(unit[0].endsWith("x")
                     && isNumber(unit[0].substring(0, unit[0].length()-1))) {

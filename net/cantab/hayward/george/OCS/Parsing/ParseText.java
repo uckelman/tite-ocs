@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.cantab.hayward.george.OCS.Parsing;
 
 import java.io.File;
@@ -34,9 +33,9 @@ public class ParseText {
         input = new LineReader(f);
         if (Statics.theStatics.isBalticGap()) {
             data = new BalticGap();
-        } else if(Statics.theStatics.isCaseBlue()) {
+        } else if (Statics.theStatics.isCaseBlue()) {
             data = new CaseBlue();
-        } else if(Statics.theStatics.isDAK()) {
+        } else if (Statics.theStatics.isDAK()) {
             data = new DAK();
         } else if (Statics.theStatics.isKorea()) {
             data = new Korea();
@@ -44,6 +43,8 @@ public class ParseText {
             data = new Tunisia();
         } else if (Statics.theStatics.isHubes()) {
             data = new Hubes();
+        } else if (Statics.theStatics.isBlitzkriegLegend()) {
+            data = new BlitzkriegLegend();
         }
         ps = new PieceSearcher(input, data);
     }
@@ -57,7 +58,7 @@ public class ParseText {
             line = input.nextLine();
             if (line == null) break;
             if (line.charAt(0) == '!') {
-                char [] special = new char[] {'!'};
+                char[] special = new char[]{'!'};
                 String[] spec = ReadAndLogInput.bufferToWords(line, special, false);
                 if (spec.length != 3) {
                     if (spec.length == 2 && spec[1].equalsIgnoreCase("instructions")) {
@@ -155,7 +156,7 @@ public class ParseText {
             StringBuffer curLine = input.nextLine();
             if (curLine == null) break;
             if (curLine.charAt(0) == '!') break;
-            char [] special = new char[] {'=', '+'};
+            char[] special = new char[]{'=', '+'};
             String[] spec = ReadAndLogInput.bufferToWords(curLine, special, false);
             int i;
             int j = -1;
@@ -167,10 +168,10 @@ public class ParseText {
                 input.writeError(true, "Bad Synonym");
                 continue;
             }
-            if ( j < 0) {
+            if (j < 0) {
                 a.add(new PieceSearcher.Synonym(PieceReader.top(spec, i), PieceReader.strip(spec, i + 1), null));
             } else {
-                String [] t = PieceReader.top(spec, i);
+                String[] t = PieceReader.top(spec, i);
                 a.add(new PieceSearcher.Synonym((PieceReader.top(t, j)), PieceReader.strip(spec, i + 1),
                         PieceReader.strip(t, j + 1)));
             }
@@ -183,14 +184,14 @@ public class ParseText {
             StringBuffer curLine = input.nextLine();
             if (curLine == null) break;
             if (curLine.charAt(0) == '!') break;
-            char [] special = new char[] {'|', '+'};
+            char[] special = new char[]{'|', '+'};
             String[] spec = ReadAndLogInput.bufferToWords(curLine, special, false);
-            List<String []> matches = new ArrayList<String[]>();
+            List<String[]> matches = new ArrayList<String[]>();
             List<String> b = new ArrayList<String>();
             PieceSearcher.Terminal t = new PieceSearcher.Terminal();
             for (int i = 0; i < spec.length; i++) {
                 if (spec[i].equals("+")) {
-                    String [] c = new String [b.size()];
+                    String[] c = new String[b.size()];
                     c = b.toArray(c);
                     matches.add(c);
                     b.clear();
