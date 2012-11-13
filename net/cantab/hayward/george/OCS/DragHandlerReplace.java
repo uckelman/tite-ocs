@@ -18,10 +18,12 @@ import VASSAL.counters.DragBuffer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.counters.Properties;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DropTargetDragEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,8 +41,7 @@ public class DragHandlerReplace extends AbstractConfigurable {
      * Return an array of Strings describing the attributes of this object.
      * These strings are used as prompts in the Properties window for this
      * object. The order of descriptions should be the same as the order of
-     * names in
-     * {@link AbstractBuildable#getAttributeNames}
+     * names in {@link AbstractBuildable#getAttributeNames}
      */
     public String[] getAttributeDescriptions() {
         return new String[0];
@@ -50,7 +51,8 @@ public class DragHandlerReplace extends AbstractConfigurable {
      * Return the Class for the attributes of this object. Valid classes are:
      * String, Integer, Double, Boolean, Image, Color, and KeyStroke
      *
-     * The order of classes should be the same as the order of names in {@link AbstractBuildable#getAttributeNames}
+     * The order of classes should be the same as the order of names in
+     * {@link AbstractBuildable#getAttributeNames}
      */
     public Class<?>[] getAttributeTypes() {
         return new Class<?>[0];
@@ -65,18 +67,17 @@ public class DragHandlerReplace extends AbstractConfigurable {
 
     /**
      * Sets an attribute value for this component. The
-     * <code>key</code> parameter will be one of those listed in {@link #getAttributeNames}.
-     * If the
+     * <code>key</code> parameter will be one of those listed in
+     * {@link #getAttributeNames}. If the
      * <code>value</code> parameter is a String, it will be the value returned
      * by {@link #getAttributeValueString} for the same
      * <code>key</code>. If the implementing class extends
      * {@link AbstractConfigurable}, then
      * <code>value</code> will be an instance of the corresponding Class listed
-     * in
-     * {@link AbstractConfigurable#getAttributeTypes}
+     * in {@link AbstractConfigurable#getAttributeTypes}
      *
      * @param key the name of the attribute. Will be one of those listed in
-     *            {@link #getAttributeNames}
+     * {@link #getAttributeNames}
      */
     public void setAttribute(String key, Object value) {
     }
@@ -87,7 +88,7 @@ public class DragHandlerReplace extends AbstractConfigurable {
      * {@link #setAttribute}.
      *
      * @param key the name of the attribute. Will be one of those listed in
-     *            {@link #getAttributeNames}
+     * {@link #getAttributeNames}
      */
     public String getAttributeValueString(String key) {
         return null;
@@ -144,11 +145,11 @@ public class DragHandlerReplace extends AbstractConfigurable {
             MapGrid h = null;
             Map base = null;
             for (PieceIterator i = db.getIterator();
-                    i.hasMoreElements();) {
+                i.hasMoreElements();) {
                 GamePiece p = i.nextPiece();
                 if (p.getMap() != null
-                        && Boolean.TRUE.equals(p.getProperty(
-                        Properties.NON_MOVABLE))) {
+                    && Boolean.TRUE.equals(p.getProperty(
+                    Properties.NON_MOVABLE))) {
                     continue;
                 }
                 pieces.add(p);
@@ -284,6 +285,19 @@ public class DragHandlerReplace extends AbstractConfigurable {
                 dragCursor.setSize(w, h);
             }
         }
+        DragReaction last;
+
+        public void dragEnter(DropTargetDragEvent e) {
+            final Component newDropWin = e.getDropTargetContext().getComponent();
+            if (newDropWin instanceof DragReaction) {
+                DragReaction cur = (DragReaction) newDropWin;
+                if (cur.startDragReaction()) {
+                    if (last != null) last.endDragReaction();
+                    last = cur;
+                }
+            }
+            super.dragEnter(e);
+        }
 
         public void dragMouseMoved(DragSourceDragEvent e) {
             if (!e.getLocation().equals(lastDragLocation)) {
@@ -318,7 +332,7 @@ public class DragHandlerReplace extends AbstractConfigurable {
                                 d = Math.abs(f.distance - e.distance);
                             } else {
                                 d = e.distance + f.distance + ranger.range(
-                                        e.coords, f.coords);
+                                    e.coords, f.coords);
                             }
                             if (d < r) {
                                 r = d;
