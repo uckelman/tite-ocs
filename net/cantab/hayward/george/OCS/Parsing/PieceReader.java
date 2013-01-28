@@ -6,6 +6,7 @@
 package net.cantab.hayward.george.OCS.Parsing;
 
 import VASSAL.build.module.Map;
+import VASSAL.counters.PieceCloner;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,6 +208,7 @@ public abstract class PieceReader {
          */
         char [] special = new char[]{'(', ',', ')'};
         String [] words = ReadAndLogInput.bufferToWords(line, special, true);
+        if (words.length == 0) return;
         /*
          * If we are parsing markers then just match the marker
          */
@@ -249,6 +251,14 @@ public abstract class PieceReader {
         if (words.length > 2 && words[0].equalsIgnoreCase("Level")
                 && isNumber(words[1])) {
             baseOrHog2(words, repeat);
+            return;
+        }
+        /*
+         * If the line ends "Level " <Number> then it is defining an airbase or hedgehog
+         */
+        if (words.length == 3  && words[1].equalsIgnoreCase("Level")
+                && isNumber(words[2])) {
+            baseOrHog3(words, repeat);
             return;
         }
         /*
@@ -670,6 +680,17 @@ public abstract class PieceReader {
                 return;
             }
             addPiece(match.findMarker("Trainbusting"));
+        } else if (words[0].equalsIgnoreCase("DG")) {
+            if (words.length != 2) {
+                input.writeError(true, "Bad Marker");
+                return;
+            }
+            if (repeat != 1) {
+                input.writeError(true, "DG marker repeated");
+                return;
+            }
+            addPiece(match.findMarker("DG"));
+
         } else if (words[words.length-2].equalsIgnoreCase("reserve")) {
             words = top(words, words.length-1);
             OcsCounter p = match.findPiece(curSide, words);
@@ -998,6 +1019,31 @@ public abstract class PieceReader {
         addPiece(p);
     }
 
+    /**
+     * Parse a hedgehog or air base piece - variant 2
+     */
+    void baseOrHog3(String [] words, int repeat) {
+        if (repeat != 1 && !Statics.theStatics.isHubes()) {
+            input.writeError(true, "Repeated hedgehogs/airbases");
+            return;
+        }
+        int depth = Integer.parseInt(words[2]);
+        if (depth > 4
+                || (!words[0].equalsIgnoreCase("hedgehog")
+                && !words[0].equalsIgnoreCase("airbase"))) {
+            input.writeError(true, "Invalid hedgehog/airbase piece");
+            return;
+        }
+
+        OcsCounter p = match.findMarker(words[0]);
+        if (p == null) return;
+        for(; depth > 1; depth--) {
+            p.keyEvent(data.levelIncKey);
+        }
+        p.theSide = curSide;
+        addPiece(p);
+    }
+
     String [] removeDrossAt(String[] a, int b) {
         return null;
     }
@@ -1274,7 +1320,7 @@ public abstract class PieceReader {
      */
     void addPiece(OcsCounter p) {
         if (p == null) return;
-        pieces.add(p);
+        pieces.add((OcsCounter)PieceCloner.getInstance().clonePiece(p));
     }
 
 }

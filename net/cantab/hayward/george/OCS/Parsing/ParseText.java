@@ -45,6 +45,8 @@ public class ParseText {
             data = new Hubes();
         } else if (Statics.theStatics.isBlitzkriegLegend()) {
             data = new BlitzkriegLegend();
+        } else if (Statics.theStatics.isHungarianRhapsody()) {
+            data = new HungarianRhapsody();
         }
         ps = new PieceSearcher(input, data);
     }
@@ -70,7 +72,7 @@ public class ParseText {
                         continue;
                     }
                     if (Statics.theStatics.isCaseBlue() && spec.length > 3
-                            && spec[2].equalsIgnoreCase("reinforcements")) {
+                        && spec[2].equalsIgnoreCase("reinforcements")) {
                         int side = -1;
                         if (spec[1].equalsIgnoreCase(Statics.theSides[0].name)) {
                             side = 0;
@@ -131,7 +133,6 @@ public class ParseText {
         try {
             input.theOutput.close();
         } catch (IOException e) {
-
         }
     }
 
@@ -173,7 +174,7 @@ public class ParseText {
             } else {
                 String[] t = PieceReader.top(spec, i);
                 a.add(new PieceSearcher.Synonym((PieceReader.top(t, j)), PieceReader.strip(spec, i + 1),
-                        PieceReader.strip(t, j + 1)));
+                                                PieceReader.strip(t, j + 1)));
             }
         }
         input.repeatThisLine();
@@ -198,7 +199,7 @@ public class ParseText {
                     t.matches.add(matches);
                     matches = new ArrayList<String[]>();
                 } else if (spec[i].equals("|")) {
-                    String [] c = new String [b.size()];
+                    String[] c = new String[b.size()];
                     c = b.toArray(c);
                     matches.add(c);
                     b.clear();
@@ -206,7 +207,7 @@ public class ParseText {
                     b.add(spec[i]);
                 }
             }
-            String [] c = new String [b.size()];
+            String[] c = new String[b.size()];
             c = b.toArray(c);
             matches.add(c);
             a.add(t);
@@ -214,5 +215,4 @@ public class ParseText {
         }
         input.repeatThisLine();
     }
-
 }

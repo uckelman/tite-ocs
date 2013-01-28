@@ -70,7 +70,7 @@ public class ScheduleReader extends SetupReader {
                 input.writeError(true, "Line ignored");
             }
         }
-        curBoard.addFinalSpace();
+        if (curBoard != null) curBoard.addFinalSpace();
         input.repeatThisLine();
     }
 

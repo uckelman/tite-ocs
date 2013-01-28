@@ -19,6 +19,7 @@
 package net.cantab.hayward.george.OCS.Parsing;
 
 import VASSAL.build.GameModule;
+import VASSAL.build.widget.BoxWidget;
 import VASSAL.build.widget.ListWidget;
 import VASSAL.counters.BasicPiece;
 import VASSAL.counters.Embellishment;
@@ -28,6 +29,7 @@ import java.awt.event.InputEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
 import net.cantab.hayward.george.OCS.Counters.Airbase;
 import net.cantab.hayward.george.OCS.Counters.Aircraft;
 import net.cantab.hayward.george.OCS.Counters.Artillery;
@@ -35,20 +37,43 @@ import net.cantab.hayward.george.OCS.Counters.AttackCapable;
 import net.cantab.hayward.george.OCS.Counters.Defensive;
 import net.cantab.hayward.george.OCS.Counters.Division;
 import net.cantab.hayward.george.OCS.Counters.Fighter;
+import net.cantab.hayward.george.OCS.Counters.GameMarker;
 import net.cantab.hayward.george.OCS.Counters.HeadQuarters;
 import net.cantab.hayward.george.OCS.Counters.Reserve;
+import net.cantab.hayward.george.OCS.Counters.Ship;
 import net.cantab.hayward.george.OCS.Counters.Transport;
 import net.cantab.hayward.george.OCS.PieceSlotOverride;
 
 /**
- * Parse Piece definitions from a text file and create pieces. This is TBL
- * specific code.
+ * Parse Piece definitions from a text file and create pieces. This was TBL
+ * specific code but has been generalised for all OCS modules.
+ *
+ * Format:
+ *
+ * # comment 
+ * 
+ * % image directory (default ./images) 
+ * 
+ * = side (0 or 1) 
+ * 
+ * ! top level 
+ * 
+ * ? second level
+ * 
+ * $+ prefix 
+ * 
+ * $- postfix 
+ *
+ * prototype 
+ * 
+ * -piece definition
+ * 
+ * position, piece definition
+ *
  *
  * @author George Hayward
  */
-public class ParsePieces {
-
-    LineReader input;
+public class ParsePieces extends LineReader {
 
     class PiecePosition {
 
@@ -93,42 +118,55 @@ public class ParsePieces {
         }
     }
     PiecePosition pos = new PiecePosition("1A0a0");
-    String proto = "german";
-    String place = "German";
+    String postfix = "";
+    String prefix = "";
+    String top = "";
+    String bottom = null;
+    String directory = "./images/";
+    String proto = "";
     int side = 0;
+    String lastDiv = "";
+    String [] curDivs = new String[100];
 
     public ParsePieces(File f) {
-        input = new LineReader(f);
+        super(f);
         StringBuffer line;
         for (;;) {
-            line = input.nextLine();
+            line = readPhysicalLine(false, true);
             if (line == null) break;
-            if (line.charAt(0) == '!') {
+            if (line.charAt(0) == '#') {
                 continue;
-            }
-            if (line.charAt(0) == '+') {
-                if (line.substring(1).equals("ge")) {
-                    proto = "german";
-                    place = "German";
-                    side = 0;
-                } else if (line.substring(1).equals("be")) {
-                    proto = "belgian";
-                    place = "Belgian";
-                    side = 1;
-                } else if (line.substring(1).equals("br")) {
-                    proto = "british";
-                    place = "British";
-                    side = 1;
-                } else if (line.substring(1).equals("fr")) {
-                    proto = "french";
-                    place = "French";
-                    side = 1;
-                } else if (line.substring(1).equals("du")) {
-                    proto = "dutch";
-                    place = "Dutch";
-                    side = 1;
+            } else if (line.charAt(0) == '%') {
+                line.deleteCharAt(0);
+                directory = line.toString() + "/";
+                continue;
+            } else if (line.charAt(0) == '=') {
+                side = (line.length() == 1 || line.charAt(1) == '0') ? 0 : 1;
+                continue;
+            } else if (line.charAt(0) == '!') {
+                line.deleteCharAt(0);
+                top = line.toString();
+                bottom = null;
+                continue;
+            } else if (line.charAt(0) == '?') {
+                line.deleteCharAt(0);
+                bottom = (line.length() == 0) ? null : line.toString();
+                continue;
+            } else if (line.charAt(0) == '*') {
+                line.deleteCharAt(0);
+                proto = line.toString();
+                continue;
+            } else if (line.charAt(0) == '$') {
+                line.deleteCharAt(0);
+                if (line.length() == 0) {
+                    prefix = "";
+                    postfix = "";
                 } else {
-                    input.writeError(true, "Unknown nationality: " + line);
+                    if (line.charAt(0) == '+') {
+                        prefix = line.substring(1);
+                    } else {
+                        postfix = line.substring(1);
+                    }
                 }
                 continue;
             }
@@ -139,15 +177,18 @@ public class ParsePieces {
             } else {
                 i = line.indexOf(",");
                 if (i < 0) {
-                    input.writeError(true, "Bad line: " + line);
+                    writeError(true, "Bad line: " + line);
                     continue;
                 }
                 pos = new PiecePosition(line.substring(0, i));
                 line.delete(0, i + 1);
             }
+            /*
+             * Piece definition type,name[,factors[,division]]
+             */
             i = line.indexOf(",");
             if (i < 0) {
-                input.writeError(true, "Bad line: " + line);
+                writeError(true, "Bad line: " + line);
                 continue;
             }
             String type = line.substring(0, i);
@@ -163,33 +204,78 @@ public class ParsePieces {
                 if (i >= 0) {
                     line.delete(0, i + 1);
                     if (line.indexOf(",") >= 0) {
-                        input.writeError(true, "Bad line: " + line);
+                        writeError(true, "Bad line: " + line);
                         continue;
                     }
                     division = line.toString();
                 }
             }
-            String aplace = place;
+            if (type.equals("ac") || type.equals("do") || type.equals("art") || type.equals("brk")) {
+                if (factors.equals("")) {
+                    writeError(true, "Factors must be present for ac or do types");
+                } else {
+                    if (type.equals("do")) {
+                        Matcher A = factorsB.matcher(factors);
+                        if (!A.lookingAt()) {
+                            writeError(true, "Invalid factors for defensive unit:" + factors);
+                        }
+                    } else {
+                        Matcher A = factorsA.matcher(factors);
+                        if (!A.lookingAt()) {
+                            writeError(true, "Invalid factors for attack capable unit or artillery or breakdown:" + factors);
+                        }
+                    }
+                }
+            } else {
+                if (!factors.equals("")) {
+                    writeError(false, "Factors not expected for type: " + type);
+                }
+            }
+            if (!division.equals("")) {
+                if (type.equals("div")) {
+                    for (i = 0; i < 100; i++) {
+                        if (curDivs[i] == null) break;
+                        if (division.equals(curDivs[i])) {
+                            writeError(true, "Division code already used");
+                            break;
+                        }
+                    }
+                    curDivs[i] = division;
+                    lastDiv = division;
+                } else {
+                    if (!division.equals(lastDiv)) {
+                        writeError(true, "Not the expected division code");
+                    }
+                }
+            } else {
+                if (type.equals("div")) {
+                    writeError(false, "Expected division code for div type");
+                }
+                lastDiv = "";
+            }
+            String atop = top;
+            String abottom = bottom;
             String aproto = proto;
             if (type.equals("brk")) {
                 type = "ac";
-                aplace = "Breakdowns";
-                String aname = "Breakdown " + factors + " " + place.substring(0, 2);
+                atop = "Breakdowns";
+                abottom = null;
+                String aname = "Breakdown " + factors + " " + postfix;
                 if (!name.equals("")) {
                     aname = aname + " " + name;
                 }
                 name = aname;
             }
-            if (type.equals("org") || type.startsWith("trans")) {
-                name += " " + place.substring(0, 2);
-                aplace = "Transport";
-            } else if (type.equals("strip")) {
-                aplace = "Airstrips/Flotilla";
-            } else if (type.equals("flotilla")) {
-                aplace = "Airstrips/Flotilla";
-            } else if (type.equals("f") && name.equals("Spit.I")) {
-                aplace = "Airstrips/Flotilla";
-            }
+//            if (type.equals("org") || type.startsWith("trans")) {
+//                name += " " + place.substring(0, 2);
+//                aplace = "Transport";
+//            } else if (type.equals("strip")) {
+//                aplace = "Airstrips/Flotilla";
+//            } else if (type.equals("flotilla")) {
+//                aplace = "Airstrips/Flotilla";
+//            } else if (type.equals("f") && name.equals("Spit.I")) {
+//                aplace = "Airstrips/Flotilla";
+//            }
             GamePiece g;
             if (type.startsWith("trans")) {
                 String[] images = new String[6];
@@ -199,7 +285,7 @@ public class ParsePieces {
                     switch (type.charAt(j)) {
                     case '5':
                         if ((found & 4) != 0) {
-                            input.writeError(true, "Duplicate transport images: " + type);
+                            writeError(true, "Duplicate transport images: " + type);
                             found = -1;
                             break;
                         }
@@ -209,7 +295,7 @@ public class ParsePieces {
                         break;
                     case 'e':
                         if ((found & 4) != 0) {
-                            input.writeError(true, "Duplicate transport images: " + type);
+                            writeError(true, "Duplicate transport images: " + type);
                             found = -1;
                             break;
                         }
@@ -219,7 +305,7 @@ public class ParsePieces {
                         break;
                     case '3':
                         if ((found & 2) != 0) {
-                            input.writeError(true, "Duplicate transport images: " + type);
+                            writeError(true, "Duplicate transport images: " + type);
                             found = -1;
                             break;
                         }
@@ -229,7 +315,7 @@ public class ParsePieces {
                         break;
                     case '4':
                         if ((found & 2) != 0) {
-                            input.writeError(true, "Duplicate transport images: " + type);
+                            writeError(true, "Duplicate transport images: " + type);
                             found = -1;
                             break;
                         }
@@ -239,7 +325,7 @@ public class ParsePieces {
                         break;
                     case '1':
                         if ((found & 1) != 0) {
-                            input.writeError(true, "Duplicate transport images: " + type);
+                            writeError(true, "Duplicate transport images: " + type);
                             found = -1;
                             break;
                         }
@@ -249,7 +335,7 @@ public class ParsePieces {
                         break;
                     case '2':
                         if ((found & 1) != 0) {
-                            input.writeError(true, "Duplicate transport images: " + type);
+                            writeError(true, "Duplicate transport images: " + type);
                             found = -1;
                             break;
                         }
@@ -260,7 +346,7 @@ public class ParsePieces {
                     case '-':
                         break;
                     default:
-                        input.writeError(true, "Invalid transport images: " + type);
+                        writeError(true, "Invalid transport images: " + type);
                         found = -1;
                         break;
                     }
@@ -269,74 +355,75 @@ public class ParsePieces {
                 }
                 if (found == -1) continue;
                 if (found != 1 && found != 3 && found != 7) {
-                    input.writeError(true, "Invalid transport images: " + type);
+                    writeError(true, "Invalid transport images: " + type);
                     continue;
                 }
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + images[0], images[0]);
+                    .addImage(directory + images[0], images[0]);
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + images[1], images[1]);
+                    .addImage(directory + images[1], images[1]);
                 if (found != 1) {
                     GameModule.getGameModule()
                         .getArchiveWriter()
-                        .addImage("./200dpi/images/" + images[2], images[2]);
+                        .addImage(directory + images[2], images[2]);
                     GameModule.getGameModule()
                         .getArchiveWriter()
-                        .addImage("./200dpi/images/" + images[3], images[3]);
+                        .addImage(directory + images[3], images[3]);
                     if (found != 3) {
                         GameModule.getGameModule()
                             .getArchiveWriter()
-                            .addImage("./200dpi/images/" + images[4], images[4]);
+                            .addImage(directory + images[4], images[4]);
                         GameModule.getGameModule()
                             .getArchiveWriter()
-                            .addImage("./200dpi/images/" + images[5], images[5]);
+                            .addImage(directory + images[5], images[5]);
                     }
                 }
                 g = new BasicPiece(";\0;\0;" + images[0] + ";" + name);
                 if (found == 1) {
                     g = new Embellishment(Embellishment.ID + ";;;Increase;" + InputEvent.CTRL_MASK + ";A;Decrease;" + InputEvent.CTRL_MASK + ";Z;;;;false;0;0;,"
-                                      + images[1] + ";,;true;;;;false;;", g);
+                                          + images[1] + ";,;true;;;;false;;", g);
                 } else if (found == 3) {
-                     g = new Embellishment(Embellishment.ID + ";;;Increase;" + InputEvent.CTRL_MASK + ";A;Decrease;" + InputEvent.CTRL_MASK + ";Z;;;;false;0;0;,"
-                                      + images[1] + "," + images[2] + "," + images[3] + ";,,,;true;;;;false;;", g);
-               } else {
-                     g = new Embellishment(Embellishment.ID + ";;;Increase;" + InputEvent.CTRL_MASK + ";A;Decrease;" + InputEvent.CTRL_MASK + ";Z;;;;false;0;0;,"
-                                      + images[1] + "," + images[2] + "," + images[3] + "," + images[4] + "," + images[5] + ";,,,,,;true;;;;false;;", g);
-               }
+                    g = new Embellishment(Embellishment.ID + ";;;Increase;" + InputEvent.CTRL_MASK + ";A;Decrease;" + InputEvent.CTRL_MASK + ";Z;;;;false;0;0;,"
+                                          + images[1] + "," + images[2] + "," + images[3] + ";,,,;true;;;;false;;", g);
+                } else {
+                    g = new Embellishment(Embellishment.ID + ";;;Increase;" + InputEvent.CTRL_MASK + ";A;Decrease;" + InputEvent.CTRL_MASK + ";Z;;;;false;0;0;,"
+                                          + images[1] + "," + images[2] + "," + images[3] + "," + images[4] + "," + images[5] + ";,,,,,;true;;;;false;;", g);
+                }
                 type = "org";
             } else if (type.equals("res")) {
-                aplace = "Reserve Markers";
+                atop = "Reserve Markers";
+                abottom = null;
                 boolean back = name.length() > 0 && name.charAt(0) == 'b';
-                name = "Reserve " + place.substring(0, 2);
+                name = prefix + "Reserve " + postfix;
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + (back ? pos.backFileName() : pos.frontFileName()), back ? pos.backFileName() : pos.frontFileName());
+                    .addImage(directory + (back ? pos.backFileName() : pos.frontFileName()), back ? pos.backFileName() : pos.frontFileName());
                 g = new BasicPiece(";\0;\0;" + (back ? pos.backFileName() : pos.frontFileName()) + ";" + name);
             } else if (type.equals("strip")) {
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + pos.frontFileName(), pos.frontFileName());
+                    .addImage(directory + pos.frontFileName(), pos.frontFileName());
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + pos.backFileName(), pos.backFileName());
+                    .addImage(directory + pos.backFileName(), pos.backFileName());
                 g = new BasicPiece(";\0;\0;" + pos.backFileName() + ";" + name);
                 g = new Embellishment(Embellishment.ID + "Flip;" + InputEvent.CTRL_MASK + ";F;;;;;;;;;;false;0;0;"
                                       + pos.frontFileName() + ";;false;;;;false;;", g);
             } else if (type.equals("flotilla")) {
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + pos.frontFileName(), pos.frontFileName());
+                    .addImage(directory + pos.frontFileName(), pos.frontFileName());
                 g = new BasicPiece(";\0;\0;" + (pos.frontFileName()) + ";" + name);
             } else {
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + pos.frontFileName(), pos.frontFileName());
+                    .addImage(directory + pos.frontFileName(), pos.frontFileName());
                 GameModule.getGameModule()
                     .getArchiveWriter()
-                    .addImage("./200dpi/images/" + pos.backFileName(), pos.backFileName());
-                g = new BasicPiece(";\0;\0;" + pos.frontFileName() + ";" + name);
+                    .addImage(directory + pos.backFileName(), pos.backFileName());
+                g = new BasicPiece(";\0;\0;" + pos.frontFileName() + ";" + prefix + name + postfix);
                 g = new Embellishment(Embellishment.ID + "Flip;" + InputEvent.CTRL_MASK + ";F;;;;;;;;;;false;0;0;"
                                       + pos.backFileName() + ";;false;;;;false;;", g);
             }
@@ -356,26 +443,53 @@ public class ParsePieces {
             } else if (type.equals("art")) {
                 g = new Artillery(";" + side + ";" + factors + ";" + division, g);
             } else if (type.equals("org")) {
-                g = new Transport(";" + side + ";;" + division, g);
+                g = new Transport(";" + side + ";" + division, g);
             } else if (type.equals("res")) {
                 g = new Reserve(";" + side, g);
+            } else if (type.equals("ship")) {
+                g = new Ship(";" + side, g);
+            } else if (type.equals("gm")) {
+                g = new GameMarker(";", g);
             } else if (type.equals("strip") || type.equals("flotilla")) {
                 g = new Airbase(";-1", g);
             } else {
-                input.writeError(true, "Unknown type: " + type);
+                writeError(true, "Unknown type: " + type);
             }
-            List<ListWidget> pr = GameModule.getGameModule().getAllDescendantComponentsOf(ListWidget.class);
+            List<ListWidget> pr = null;
+            if (abottom == null) {
+                pr = GameModule.getGameModule().getAllDescendantComponentsOf(ListWidget.class);
+            } else {
+                List<BoxWidget> tr = GameModule.getGameModule().getAllDescendantComponentsOf(BoxWidget.class);
+                tr = tr.get(0).getAllDescendantComponentsOf(BoxWidget.class);
+                for (BoxWidget trx : tr) {
+                    if (trx.getAttributeValueString("entryName").equals(atop)) {
+                        pr = trx.getAllDescendantComponentsOf(ListWidget.class);
+                        break;
+                    }
+                }
+                if (pr == null) {
+                    writeError(true, "Unknown top level: " + atop);
+                    continue;
+                }
+                atop = abottom;
+            }
+            boolean found = false;
             for (ListWidget l : pr) {
-                if (l.getAttributeValueString("entryName").equals(aplace)) {
+                if (l.getAttributeValueString("entryName").equals(atop)) {
                     PieceSlotOverride fred = new PieceSlotOverride();
                     fred.setPiece(g);
                     fred.updateGpId(GameModule.getGameModule());
                     l.add(fred);
+                    found = true;
+                    break;
                 }
+            }
+            if (!found) {
+                writeError(true, "Scrollable list not found: " + atop);
             }
         }
         try {
-            input.theOutput.close();
+            theOutput.close();
         } catch (IOException e) {
         }
     }

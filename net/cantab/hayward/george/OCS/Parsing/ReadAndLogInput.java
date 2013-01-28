@@ -364,7 +364,7 @@ public class ReadAndLogInput {
      * @return the line just read or null if at the end of the input file
      * @throws IOException
      */
-    private StringBuffer readPhysicalLine(boolean continuation, boolean matched) {
+    protected StringBuffer readPhysicalLine(boolean continuation, boolean matched) {
         StringBuffer sb = new StringBuffer();
         int b;
         try {
