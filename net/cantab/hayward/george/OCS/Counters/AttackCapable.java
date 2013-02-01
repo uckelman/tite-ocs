@@ -15,7 +15,6 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-
 package net.cantab.hayward.george.OCS.Counters;
 
 import VASSAL.counters.AreaOfEffect;
@@ -26,12 +25,13 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import net.cantab.hayward.george.OCS.AreaOfEffectOverride;
+import net.cantab.hayward.george.OCS.ZoneDrawer;
 import net.cantab.hayward.george.OCS.OcsCounter;
 import net.cantab.hayward.george.OCS.Statics;
 
 /**
  * Attack capable Combat Units
+ *
  * @author George Hayward
  */
 public class AttackCapable extends Land {
@@ -56,45 +56,27 @@ public class AttackCapable extends Land {
     public AttackCapable() {
         this(ID, null);
     }
+    ZoneDrawer drawer = new ZoneDrawer(Color.RED, false);
 
-    AreaOfEffectOverride drawer = new AreaOfEffectOverride(Color.RED);
-    
     /**
      * Construct an artillery counter from its type string
+     *
      * @param type
      */
-    public AttackCapable(String type, GamePiece p ) {
+    public AttackCapable(String type, GamePiece p) {
         super(type, p);
-        drawer.setRadius(1);
-    }
-
-    @Override
-    public void setInner(GamePiece p) {
-        super.setInner(p);
-        if (drawer != null) drawer.setInner(p);
     }
 
     public String getDescription() {
         return "Attack Capable Combat Unit";
     }
-    
     public boolean hasZOC = false;
-    
+
     public void draw(Graphics g, int x, int y, Component obs, double zoom) {
-        drawer.setInner(piece);
-        drawer.setActive(theSide < 0 ? false :(security >= OcsCounter.VISIBLE & hasZOC & Statics.showZOCs[theSide]));
-        drawer.draw(g, x, y, obs, zoom);
-    }
-    
-    public Rectangle boundingBox() {
-        drawer.setInner(piece);
-        drawer.setActive(theSide < 0 ? false :(security >= OcsCounter.VISIBLE & hasZOC & Statics.showZOCs[theSide]));
-        return drawer.boundingBox();
-    }
-    
-    public Shape getShape() {
-        drawer.setInner(piece);
-        drawer.setActive(theSide < 0 ? false :(security >= OcsCounter.VISIBLE & hasZOC & Statics.showZOCs[theSide]));
-        return drawer.getShape();
+        if (theSide < 0 ? false : (security >= OcsCounter.VISIBLE & hasZOC
+                                   & Statics.showZOCs[theSide])) {
+            drawer.draw(g, x, y, obs, zoom, getMap(), getPosition());
+        }
+        super.draw(g, x, y, obs, zoom);
     }
 }
