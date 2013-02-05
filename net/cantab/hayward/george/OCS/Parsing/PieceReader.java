@@ -698,7 +698,9 @@ public abstract class PieceReader {
                 addPiece(p);
             }
         } else {
-            if (Statics.theStatics.isBalticGap() && words.length == 3
+            if ((Statics.theStatics.isBalticGap() 
+                 || Statics.theStatics.isHungarianRhapsody())
+                && words.length == 3
                     && words[0].equalsIgnoreCase("Arty")
                     && words[1].equalsIgnoreCase("Ammo")) {
                 String[] nw = new String[]{"Soviet","Arty","Ammo"};
