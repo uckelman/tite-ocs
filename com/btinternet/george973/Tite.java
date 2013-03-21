@@ -66,6 +66,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
 
 
 /**
@@ -1731,18 +1733,54 @@ public class Tite extends AbstractConfigurable
   }
     
   public void launch() {
+      LookAndFeel f = null;
+          try {
+              f=UIManager.getLookAndFeel();
+    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    } catch (Exception e) {
+
+    }
+    
+
     buildCommandMenu();
     menu.getPopupMenu().show( commandLaunch, 0, commandLaunch.getHeight() );
+    try {
+    UIManager.setLookAndFeel(f);
+    } catch (Exception e) {}
   }
   
   public void launchAttach() {
+      LookAndFeel f = null;
+          try {
+              f=UIManager.getLookAndFeel();
+    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    } catch (Exception e) {
+
+    }
+    
+
     buildAttachMenu();
     menu.getPopupMenu().show( attachLaunch, 0, attachLaunch.getHeight() );
+    try {
+    UIManager.setLookAndFeel(f);
+    } catch (Exception e) {}
   }
   
   public void launchAttachment() {
+      LookAndFeel f = null;
+          try {
+              f=UIManager.getLookAndFeel();
+    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    } catch (Exception e) {
+
+    }
+    
+
     buildAttachmentMenu();
     menu.getPopupMenu().show(attachmentLaunch, 0, attachmentLaunch.getHeight());
+    try {
+    UIManager.setLookAndFeel(f);
+    } catch (Exception e) {}
   }
 
   public void openWindow() {

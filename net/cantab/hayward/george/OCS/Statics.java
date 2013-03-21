@@ -127,6 +127,9 @@ public class Statics extends AbstractConfigurable
     final static int Burma = 8;
     final static int TBL = 9;
     final static int HR = 10;
+    final static int RE = 11;
+    final static int BTR = 12;
+    final static int Italy = 13;
 
     /**
      * Returns true if game is Baltic Gap
@@ -196,6 +199,24 @@ public class Statics extends AbstractConfigurable
      */
     public boolean isHungarianRhapsody() {
         return module == HR;
+    }
+    /**
+     * True if this game is Reluctant Enemies
+     */
+    public boolean isReluctantEnemies() {
+        return module == RE;
+    }
+    /**
+     * True if this game is Beyond the Rhine
+     */
+    public boolean isBeyondTheRhine() {
+        return module == BTR;
+    }
+    /**
+     * True if this game is OCS Italy
+     */
+    public boolean isItaly() {
+        return module == Italy;
     }
     /**
      * An array of all the piece definitions used in the module
@@ -993,7 +1014,10 @@ public class Statics extends AbstractConfigurable
                     "Sicily",
                     "Burma",
                     "The Blitzkrieg Legend",
-                    "Hungarian Rhapsody"
+                    "Hungarian Rhapsody",
+                    "Reluctant Enemies",
+                    "Beyond The Rhine",
+                    "Italy"
                 });
         }
     }
@@ -1043,6 +1067,12 @@ public class Statics extends AbstractConfigurable
                     module = TBL;
                 } else if (value.equals("Hungarian Rhapsody")) {
                     module = HR;
+                } else if (value.equals("Reluctant Enemies")) {
+                    module = RE;
+                } else if (value.equals("Beyond The Rhine")) {
+                    module = BTR;
+                } else if (value.equals("Italy")) {
+                    module = Italy;
                 } else {
                     module = BalticGap;
                 }
@@ -1078,6 +1108,12 @@ public class Statics extends AbstractConfigurable
                 return "The Blitzkrieg Legend";
             case HR:
                 return "Hungarian Rhapsody";
+            case RE:
+                return "Reluctant Enemies";
+            case BTR:
+                return "Beyond The Rhine";
+            case Italy:
+                return "Italy";
             }
         }
         return null;

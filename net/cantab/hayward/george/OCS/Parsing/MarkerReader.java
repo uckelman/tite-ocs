@@ -275,6 +275,9 @@ public class MarkerReader extends PieceReader {
     static Board findBoard(String boardName, boolean partial) {
         Collection<Board> bs = Statics.theMap.getBoards();
         for ( Board b : bs ) {
+            if (Statics.theStatics.isReluctantEnemies()) {
+                return b;
+            }
             if ( b.getName().equalsIgnoreCase(boardName)) {
                 return b;
             }

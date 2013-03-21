@@ -82,8 +82,12 @@ public class OcsHexZone extends Zone {
     }
 
     void convertHexNameToPoint() {
+        String h = hexName;
+        if (Statics.theStatics.isReluctantEnemies()) {
+            h = "Z" + h;
+        }
         Pattern hexRef = Pattern.compile("(.+?)(\\d+)\\.(\\d+)");
-        Matcher m = hexRef.matcher(hexName);
+        Matcher m = hexRef.matcher(h);
         if (m.matches()) {
             String mapId = m.group(1);
             int row = Integer.parseInt(m.group(2));
