@@ -10,7 +10,6 @@ import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.mapgrid.HexGridNumbering;
 import VASSAL.counters.Labeler;
 import VASSAL.tools.ScrollPane;
-import VASSAL.tools.logging.Logger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -379,7 +378,7 @@ public class HexGridNumberingOverride extends HexGridNumbering {
             }
             // FIXME: review error message
             catch (NumberFormatException e1) {
-              Logger.log(e1);
+              System.err.println(e1);
             }
           }
         });
