@@ -405,7 +405,8 @@ public class PieceSearcher {
             }
             if (factors != null && !factors.equals(p.factors)) continue;
             if (dName != null && !dName.equals(p.division)) continue;
-            if (dName == null && ocsType1 != Division.class && (p.division == null || !p.division.equals("")))
+            if (Statics.theStatics.isBlitzkriegLegend() && dName == null 
+                && ocsType1 != Division.class && (p.division == null || !p.division.equals("")))
                 continue;
             if (id == null || p.name.equals(id)
                 || (altId != null && p.name.equals(altId))
