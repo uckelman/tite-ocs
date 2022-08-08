@@ -12,7 +12,7 @@ CLASSPATH:=$(CLASSDIR):lib/Vengine.jar
 
 JAVAPATH:=/usr/bin
 JAVAC:=$(JAVAPATH)/javac
-JAVACFLAGS:=-d $(CLASSDIR) -source 5 -target 5 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR)
+JAVACFLAGS:=-d $(CLASSDIR) -source 11 -target 11 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR)
 
 all: $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) $(shell find $(SRCDIR) -name '*.java')
