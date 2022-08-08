@@ -204,7 +204,7 @@ public class BoardOverride extends Board {
   public void setAttribute(String key, Object val) {
     if (WIDTH.equals(key)) {
       if (val instanceof String) {
-        val = new Integer((String) val);
+        val = Integer.valueOf((String) val);
       }
       if (val != null) {
         selection.setSize(((Integer) val).intValue(), selection.height);
@@ -212,7 +212,7 @@ public class BoardOverride extends Board {
       return;
     } else if (HEIGHT.equals(key)) {
       if (val instanceof String) {
-        val = new Integer((String) val);
+        val = Integer.valueOf((String) val);
       }
       if (val != null) {
         selection.setSize(selection.width, ((Integer) val).intValue());
@@ -221,7 +221,7 @@ public class BoardOverride extends Board {
     }
     if (X_ORIGIN.equals(key)) {
       if (val instanceof String) {
-        val = new Integer((String) val);
+        val = Integer.valueOf((String) val);
       }
       if (val != null) {
         selection.setLocation(((Integer) val).intValue(), selection.y);
@@ -229,7 +229,7 @@ public class BoardOverride extends Board {
       return;
     } else if (Y_ORIGIN.equals(key)) {
       if (val instanceof String) {
-        val = new Integer((String) val);
+        val = Integer.valueOf((String) val);
       }
       if (val != null) {
         selection.setLocation(selection.x, ((Integer) val).intValue());

@@ -99,7 +99,7 @@ public class SetupBoard extends Board implements GameComponent {
     public void setAttribute(String key, Object val) {
         if (PIECE_WIDTH.equals(key)) {
             if (val instanceof String) {
-                val = new Integer((String)val);
+                val = Integer.valueOf((String)val);
             }
             if (val instanceof Integer) {
                 pieceWidth = ((Integer) val).intValue();
@@ -108,7 +108,7 @@ public class SetupBoard extends Board implements GameComponent {
         }
         if (PIECE_HEIGHT.equals(key)) {
             if (val instanceof String) {
-                val = new Integer((String)val);
+                val = Integer.valueOf((String)val);
             }
             if (val instanceof Integer) {
                 pieceHeight = ((Integer) val).intValue();

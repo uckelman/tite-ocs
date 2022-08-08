@@ -1158,19 +1158,19 @@ public class Statics extends AbstractConfigurable
         GameModule.getGameModule().getPrefs().addOption(
             Resources.getString("Prefs.general_tab"),
             new IntConfigurer(RANGE_AIR_HIDDEN,
-                              "OCS - Range at which air units become invisible", new Integer(40)));
+                              "OCS - Range at which air units become invisible", 40));
         GameModule.getGameModule().getPrefs().addOption(
             Resources.getString("Prefs.general_tab"),
             new IntConfigurer(RANGE_HIDDEN,
-                              "OCS - Range at which land/sea units become invisible", new Integer(20)));
+                              "OCS - Range at which land/sea units become invisible", 20));
         GameModule.getGameModule().getPrefs().addOption(
             Resources.getString("Prefs.general_tab"),
             new IntConfigurer(RANGE_CONCEALED,
-                              "OCS - Range at which units become masked", new Integer(10)));
+                              "OCS - Range at which units become masked", 10));
         GameModule.getGameModule().getPrefs().addOption(
             Resources.getString("Prefs.general_tab"),
             new IntConfigurer(RANGE_FLAT,
-                              "OCS - Range at which stacks are shown as a single counter", new Integer(5)));
+                              "OCS - Range at which stacks are shown as a single counter", 5));
         GameModule.getGameModule().getPrefs().addOption(
             Resources.getString("Prefs.general_tab"),
             new BooleanConfigurer(USE_FORMATIONS,

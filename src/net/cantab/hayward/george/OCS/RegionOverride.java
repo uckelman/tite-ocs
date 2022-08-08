@@ -149,13 +149,13 @@ public class RegionOverride extends Region {
     }
     else if (X.equals(key)) {
       if (val instanceof String) {
-        val = new Integer((String) val);
+        val = Integer.valueOf((String) val);
       }
       origin.x = ((Integer) val).intValue();
     }
     else if (Y.equals(key)) {
       if (val instanceof String) {
-        val = new Integer((String) val);
+        val = Integer.valueOf((String) val);
       }
       origin.y = ((Integer) val).intValue();
     }

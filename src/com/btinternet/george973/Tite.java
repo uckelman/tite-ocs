@@ -1563,7 +1563,7 @@ public class Tite extends AbstractConfigurable
     }
     if ( CURRENT_SCENARIO.equals(key)) {
       if ( value.getClass() == String.class ) {
-        value = new Integer((String) value);
+        value = Integer.valueOf((String) value);
       }
       if ( value instanceof Integer ) {
         curScenario = (Integer) value;

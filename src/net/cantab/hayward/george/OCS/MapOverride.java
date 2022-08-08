@@ -992,7 +992,7 @@ public class MapOverride extends Map {
         GameModule.getGameModule().getToolBar().add(launchButton);
         if (shouldDockIntoMainWindow()) {
             final IntConfigurer config =
-                    new IntConfigurer(MAIN_WINDOW_HEIGHT, null, new Integer(-1));
+                    new IntConfigurer(MAIN_WINDOW_HEIGHT, null, -1);
             Prefs.getGlobalPrefs().addOption(null, config);
             final ComponentSplitter splitter = new ComponentSplitter();
 
@@ -1035,7 +1035,7 @@ public class MapOverride extends Map {
                 new IntConfigurer(
                 PREFERRED_EDGE_DELAY,
                 Resources.getString("Map.scroll_delay_preference"), //$NON-NLS-1$
-                new Integer(PREFERRED_EDGE_SCROLL_DELAY)));
+                PREFERRED_EDGE_SCROLL_DELAY));
 
         GameModule.getGameModule().getPrefs().addOption(
                 Resources.getString("Prefs.general_tab"), //$NON-NLS-1$
