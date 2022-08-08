@@ -1237,7 +1237,7 @@ public class Statics extends AbstractConfigurable
      * Abstract methods from Configurable which are implemented here
      */
     public Class<?>[] getAllowableConfigureComponents() {
-        return new Class[0];
+        return new Class<?>[0];
     }
 
     public HelpFile getHelpFile() {
