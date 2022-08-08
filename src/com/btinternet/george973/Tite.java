@@ -1554,7 +1554,7 @@ public class Tite extends AbstractConfigurable
   public void setAttribute(String key, Object value) {
     if ( SAVING_SCENARIO.equals(key)) {
       if ( value.getClass() == String.class ) {
-        value = new Boolean((String) value);
+        value = Boolean.valueOf((String) value);
       }
       if ( value instanceof Boolean ) {
         scenarioFlag = (Boolean) value;

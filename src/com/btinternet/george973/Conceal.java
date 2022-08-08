@@ -137,7 +137,7 @@ public class Conceal extends Decorator implements EditablePiece {
     if ( !enabler.equals("")) {
       Object value = GameModule.getGameModule().getProperty(enabler);
       if ( value.getClass() == String.class ) {
-        value = new Boolean((String) value);
+        value = Boolean.valueOf((String) value);
       }
       if ( value instanceof Boolean ) {
         doIt = (Boolean) value;
