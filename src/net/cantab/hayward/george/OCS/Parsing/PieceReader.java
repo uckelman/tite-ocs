@@ -1179,7 +1179,7 @@ public abstract class PieceReader {
             int j;
             for (j = words.length - 1; j >= 0; j--) {
                 if (words[j].equals(",")) {
-                    String[] md = this.strip(words, j);
+                    String[] md = strip(words, j);
                     if (isStepLoss(md) != 0 && lossLength + 1 == md.length) {
                         words = remove(words, j);
                         noIds--;
