@@ -1533,8 +1533,8 @@ public class Tite extends AbstractConfigurable
    * 
    * The order of classes should be the same as the order of names in {@link AbstractBuildable#getAttributeNames}
    */
-  public Class[] getAttributeTypes() {
-    Class[] c =  {
+  public Class<?>[] getAttributeTypes() {
+    Class<?>[] c =  {
       Integer.class,
       Boolean.class
     };
@@ -1583,7 +1583,7 @@ public class Tite extends AbstractConfigurable
   }
   
   public Class<?>[] getAllowableConfigureComponents() {
-    return new Class[] {
+    return new Class<?>[] {
       TiteMap.class
     };
   }

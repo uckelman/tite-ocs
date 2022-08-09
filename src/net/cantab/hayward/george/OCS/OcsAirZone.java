@@ -46,8 +46,8 @@ public class OcsAirZone extends OcsSideZone {
 
     @Override
     public Class<?>[] getAttributeTypes() {
-        Class [] s = super.getAttributeTypes();
-        Class [] t = new Class[s.length + 1];
+        Class<?>[] s = super.getAttributeTypes();
+        Class<?>[] t = new Class<?>[s.length + 1];
         System.arraycopy(s, 0, t, 0, s.length);
         t[s.length] = String[].class;
         return t;

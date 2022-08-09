@@ -151,7 +151,7 @@ public class BoardOverride extends Board {
   }
   
   public Class<?>[] getAllowableConfigureComponents() {
-    return new Class[] {
+    return new Class<?>[] {
       HexGrid.class,
       SquareGrid.class,
       RegionGrid.class,
