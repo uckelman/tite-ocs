@@ -97,8 +97,8 @@ public class Korea extends ModuleSpecific {
         if (words.length > 3 && words[0].equals("NK") && words[1].equals("Sec")
                 && words[2].equals("Bde") && words[3].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.tail(words, words.length - 4);
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.tail(words, words.length - 4);
+            words = PieceReader.top(words, words.length - 1);
             int i;
             for (i = 0; i < words.length; i += 3) {
                 String [] m = new String [5];
@@ -114,8 +114,8 @@ public class Korea extends ModuleSpecific {
         if (words.length > 3 && words[0].equals("NK") && words[1].equals("NG")
                 && words[2].equals("Bn") && words[3].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.tail(words, words.length - 4);
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.tail(words, words.length - 4);
+            words = PieceReader.top(words, words.length - 1);
             int i;
             for (i = 0; i < words.length; i += 2) {
                 String [] m = new String [4];
@@ -130,8 +130,8 @@ public class Korea extends ModuleSpecific {
         if (words.length > 3 && words[0].equals("NK") && words[1].equals("Inf")
                 && words[2].equals("Rgt") && words[3].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.tail(words, words.length - 4);
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.tail(words, words.length - 4);
+            words = PieceReader.top(words, words.length - 1);
             int i;
             for (i = 0; i < words.length; i += 2) {
                 String [] m = new String [4];
@@ -146,8 +146,8 @@ public class Korea extends ModuleSpecific {
         if (words.length > 3 && words[0].equals("NK") && words[1].equals("Marine")
                 && words[2].equals("Rgt") && words[3].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.tail(words, words.length - 4);
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.tail(words, words.length - 4);
+            words = PieceReader.top(words, words.length - 1);
             int i;
             for (i = 0; i < words.length; i += 2) {
                 String [] m = new String [4];
@@ -162,8 +162,8 @@ public class Korea extends ModuleSpecific {
         if (words.length > 3 && words[0].equals("NK") && words[1].equals("MC")
                 && words[2].equals("Rgt") && words[3].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.tail(words, words.length - 4);
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.tail(words, words.length - 4);
+            words = PieceReader.top(words, words.length - 1);
             int i;
             for (i = 0; i < words.length; i += 2) {
                 String [] m = new String [4];
@@ -178,8 +178,8 @@ public class Korea extends ModuleSpecific {
         if (words.length > 3 && words[0].equals("NK") && words[1].equals("Tank")
                 && words[2].equals("Bn") && words[3].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.tail(words, words.length - 4);
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.tail(words, words.length - 4);
+            words = PieceReader.top(words, words.length - 1);
             int i;
             for (i = 0; i < words.length; i += 2) {
                 String [] m = new String [4];
@@ -194,8 +194,8 @@ public class Korea extends ModuleSpecific {
         if (words.length > 3 && words[0].equals("NK") && words[1].equals("Arty")
                 && words[2].equals("Rgt") && words[3].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.tail(words, words.length - 4);
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.tail(words, words.length - 4);
+            words = PieceReader.top(words, words.length - 1);
             int i;
             {
                 String [] m = new String [5];
@@ -292,7 +292,7 @@ public class Korea extends ModuleSpecific {
                         for (; count > 1; count--) {
                             p.keyEvent(levelIncKey);
                         }
-                        s = pr.tail(s, s.length - 3);
+                        s = PieceReader.tail(s, s.length - 3);
                         for (String t: s) {
                             if (t.equals(",")) continue;
                             Matcher m = hexRef.matcher(t);

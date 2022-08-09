@@ -49,7 +49,7 @@ public class DAK extends ModuleSpecific {
         if (words.length == 5 && words[0].equals("8") && words[1].equals("Arm")
                 && words[2].equals("Dummy") && words[3].equals("Divisional")
                 && words[4].equals("Marker")) {
-            words = pr.top(words, 2);
+            words = PieceReader.top(words, 2);
             pr.addPiece(pr.match.findPiece(side, Division.class, words));
             return true;
         }
@@ -58,7 +58,7 @@ public class DAK extends ModuleSpecific {
             return true;
         }
         if (words[words.length - 1].equalsIgnoreCase("leader")) {
-            words = pr.top(words, words.length - 1);
+            words = PieceReader.top(words, words.length - 1);
             if (words.length == 2 && words[1].equalsIgnoreCase("Connor")) {
                 words = new String[]{"OConnor"};
             }
@@ -84,9 +84,9 @@ public class DAK extends ModuleSpecific {
                 && words[1].equalsIgnoreCase("Marker")
                 && words[2].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.remove(words, words.length - 1);
-            words = pr.remove(words, 1);
-            words = pr.remove(words, 1);
+            words = PieceReader.remove(words, words.length - 1);
+            words = PieceReader.remove(words, 1);
+            words = PieceReader.remove(words, 1);
             pr.addPiece(pr.match.findPiece(side, Leader.class, words));
             return true;
         }
@@ -94,14 +94,14 @@ public class DAK extends ModuleSpecific {
                 && words[1].equalsIgnoreCase("Markers")
                 && words[2].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.remove(words, words.length - 1);
-            words = pr.remove(words, 1);
-            words = pr.remove(words, 1);
+            words = PieceReader.remove(words, words.length - 1);
+            words = PieceReader.remove(words, 1);
+            words = PieceReader.remove(words, 1);
             for (int i = 2; i < words.length; i++) {
                 if (words[i].equals(",")) {
-                    pr.addPiece(pr.match.findPiece(side, Leader.class, pr.top(words, i)));
+                    pr.addPiece(pr.match.findPiece(side, Leader.class, PieceReader.top(words, i)));
                     for (int j = 1; j <= i; j++) {
-                        words = pr.remove(words, 1);
+                        words = PieceReader.remove(words, 1);
                     }
                     i = 1;
                 }
@@ -111,7 +111,7 @@ public class DAK extends ModuleSpecific {
         }
         if (words.length > 2 && words[0].equalsIgnoreCase("KG")
                 && words[words.length - 1].equalsIgnoreCase("Marker")) {
-            words = pr.remove(words, words.length - 1);
+            words = PieceReader.remove(words, words.length - 1);
             pr.addPiece(pr.match.findPiece(side, Leader.class, words));
             return true;
         }
@@ -119,9 +119,9 @@ public class DAK extends ModuleSpecific {
                 && words[1].equalsIgnoreCase("Marker")
                 && words[2].equals("(")
                 && words[words.length - 1].equals(")")) {
-            words = pr.remove(words, words.length - 1);
-            words = pr.remove(words, 1);
-            words = pr.remove(words, 1);
+            words = PieceReader.remove(words, words.length - 1);
+            words = PieceReader.remove(words, 1);
+            words = PieceReader.remove(words, 1);
             words[0] = "Ragg";
             pr.addPiece(pr.match.findPiece(side, Leader.class, words));
             return true;
