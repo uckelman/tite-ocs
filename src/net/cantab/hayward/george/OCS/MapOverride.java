@@ -8,7 +8,6 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
-import VASSAL.build.module.PlayerRoster;
 import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.module.map.StackMetrics;
@@ -1034,7 +1033,7 @@ public class MapOverride extends Map {
             }
         });
 
-        PlayerRoster.addSideChangeListener(this);
+        GameModule.getGameModule().addSideChangeListenerToPlayerRoster(this);
         GameModule.getGameModule().getPrefs().addOption(
                 Resources.getString("Prefs.general_tab"), //$NON-NLS-1$
                 new IntConfigurer(
