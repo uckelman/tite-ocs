@@ -43,7 +43,7 @@ import VASSAL.tools.imageop.Repainter;
 import VASSAL.tools.imageop.ScaleOp;
 import VASSAL.tools.imageop.SourceOp;
 
-import VASSAL.counters.Labeler;
+import VASSAL.tools.image.LabelUtils;
 
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -413,8 +413,8 @@ public class BoardOverride extends Board {
           boolean Hdr = labels[z].charAt(0) == '+';
           if ( a instanceof RegularGridNumbering ) {
             pt = ((RegularGridNumbering)a).getCenterPoint( Hdr ? 1 : 2, z+1);
-            Labeler.drawLabel(g, labels[z].substring(1), pt.x, pt.y,
-                    new Font("Dialog", Font.PLAIN, (int)((Hdr ? 20 : 16 ) * zoom )), Labeler.RIGHT, Labeler.CENTER,
+            LabelUtils.drawLabel(g, labels[z].substring(1), pt.x, pt.y,
+                    new Font("Dialog", Font.PLAIN, (int)((Hdr ? 20 : 16 ) * zoom )), LabelUtils.RIGHT, LabelUtils.CENTER,
                     Color.BLACK, color != null ? color : Color.WHITE,
                     color != null ? color : Color.WHITE);
           }

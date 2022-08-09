@@ -11,7 +11,7 @@ import VASSAL.build.module.map.boardPicker.board.Region;
 import VASSAL.build.module.map.boardPicker.board.RegionGrid;
 import VASSAL.build.module.map.boardPicker.board.mapgrid.GridContainer;
 import VASSAL.build.module.map.boardPicker.board.mapgrid.Zone;
-import VASSAL.counters.Labeler;
+import VASSAL.tools.image.LabelUtils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -252,8 +252,8 @@ public class RegionOverride extends Region {
 
     g.setColor(saveColor);
 
-    Labeler.drawLabel(g, getLocalizedConfigureName(), posX, posY + labelOffset, f, Labeler.CENTER,
-                      Labeler.TOP, fg, bg, fg);
+    LabelUtils.drawLabel(g, getLocalizedConfigureName(), posX, posY + labelOffset, f, LabelUtils.CENTER,
+                      LabelUtils.TOP, fg, bg, fg);
     g.setClip(oldClip);
 
     // Calculate and store the selection rectangle

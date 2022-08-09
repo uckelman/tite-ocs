@@ -42,7 +42,7 @@ import javax.swing.JComponent;
 
 
 import VASSAL.counters.GamePiece;
-import VASSAL.counters.Labeler;
+import VASSAL.tools.image.LabelUtils;
 
 import VASSAL.counters.Properties;
 
@@ -99,7 +99,7 @@ public class CounterDetailViewerOverride  extends CounterDetailViewer {
           if (text.length() > 0) {
         	  int x = bounds.x - (int) (pieceBounds.x * graphicsZoom) + borderOffset;
         	  int y = bounds.y + bounds.height + 10;
-        	  drawLabel(g, new Point(x, y), text, Labeler.CENTER, Labeler.CENTER);
+        	  drawLabel(g, new Point(x, y), text, LabelUtils.CENTER, LabelUtils.CENTER);
           }
         }
 
@@ -127,7 +127,7 @@ public class CounterDetailViewerOverride  extends CounterDetailViewer {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
       while ( st.hasMoreTokens()) {
         String s = st.nextToken();
-        Labeler.drawLabel(g, s, pt.x, pt.y, new Font("Dialog", Font.PLAIN, fontSize), hAlign, vAlign, labelFgColor, bgColor, labelFgColor);
+        LabelUtils.drawLabel(g, s, pt.x, pt.y, new Font("Dialog", Font.PLAIN, fontSize), hAlign, vAlign, labelFgColor, bgColor, labelFgColor);
         pt.y += g.getFontMetrics().getHeight();
       }
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

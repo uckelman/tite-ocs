@@ -8,8 +8,8 @@ package net.cantab.hayward.george.OCS;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.mapgrid.HexGridNumbering;
-import VASSAL.counters.Labeler;
 import VASSAL.tools.ScrollPane;
+import VASSAL.tools.image.LabelUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -151,10 +151,10 @@ public class HexGridNumberingOverride extends HexGridNumbering {
 
     Font f = new Font("Dialog", Font.PLAIN, size);
     Point p = new Point();
-    int alignment = Labeler.TOP;
+    int alignment = LabelUtils.TOP;
     int offset = -(int) Math.round(deltaY / 2);
     if (grid.isSideways() || rotateTextDegrees != 0) {
-      alignment = Labeler.CENTER;
+      alignment = LabelUtils.CENTER;
       offset = 0;
     }
 
@@ -181,11 +181,11 @@ public class HexGridNumberingOverride extends HexGridNumbering {
         gridp.y = (int) Math.round(gridp.y / scale);
 
         centerPoint = offsetLabelCenter(p, scale);
-        Labeler.drawLabel(g2d, getName(getRow(gridp), getColumn(gridp)),
+        LabelUtils.drawLabel(g2d, getName(getRow(gridp), getColumn(gridp)),
                           centerPoint.x,
                           centerPoint.y,
                           f,
-                          Labeler.CENTER,
+                          LabelUtils.CENTER,
                           alignment, color, null, null);
 
         p.setLocation((int) Math.round(x + deltaX), (int) Math.round(y + deltaY / 2) + offset);
@@ -199,11 +199,11 @@ public class HexGridNumberingOverride extends HexGridNumbering {
         gridp.y = (int) Math.round(gridp.y / scale);
 
         centerPoint = offsetLabelCenter(p, scale);
-        Labeler.drawLabel(g2d, getName(getRow(gridp), getColumn(gridp)),
+        LabelUtils.drawLabel(g2d, getName(getRow(gridp), getColumn(gridp)),
                           centerPoint.x,
                           centerPoint.y,
                           f,
-                          Labeler.CENTER,
+                          LabelUtils.CENTER,
                           alignment, color, null, null);
       }
     }
