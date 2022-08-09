@@ -155,7 +155,8 @@ public class TiteTraitBase extends TiteTrait implements EditablePiece {
   }
   
   class AttachKeyCommand extends KeyCommand {
-    
+    private static final long serialVersionUID = 1L;  
+  
     private JMenu attachMenu;
     
     public AttachKeyCommand( String name, GamePiece target, JMenu m ) {

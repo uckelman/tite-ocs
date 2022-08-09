@@ -701,6 +701,7 @@ public class MapOverride extends Map {
     }
     
     public class myMenuItem extends JMenuItem implements DragReaction {
+        private static final long serialVersionUID = 1L;
         
         aRestrict forThis;
         
@@ -725,6 +726,7 @@ public class MapOverride extends Map {
     }
 
     public class myButton extends JButton implements DragReaction {
+        private static final long serialVersionUID = 1L;
 
         JPopupMenu thePopup;
 
@@ -761,6 +763,7 @@ public class MapOverride extends Map {
     }
 
     public class myScrollPane extends AdjustableSpeedScrollPane {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Creates an AdjustableSpeedScrollPane that displays the contents of the
@@ -809,6 +812,7 @@ public class MapOverride extends Map {
     }
 
     public class myViewport extends JViewport {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Returns the view coordinates that appear in the upper left
@@ -900,6 +904,7 @@ public class MapOverride extends Map {
     }
 
     public static class myView extends Map.View {
+        private static final long serialVersionUID = 1L;
 
         MapOverride map;
 

@@ -66,8 +66,10 @@ import net.cantab.hayward.george.OCS.Counters.Unit;
  * @author George Hayward
  */
 public class PieceProcessor extends JPanel {
+    private static final long serialVersionUID = 1L;
 
     class imageDisplayA extends JPanel {
+        private static final long serialVersionUID = 1L;
 
         GamePiece pce;
 
@@ -90,6 +92,7 @@ public class PieceProcessor extends JPanel {
     }
 
     class imageDisplay extends JPanel {
+        private static final long serialVersionUID = 1L;
 
         imageDisplay(PiecePtr p) {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -109,6 +112,7 @@ public class PieceProcessor extends JPanel {
     static String lastType = "";
 
     class textDataDisplay extends JPanel {
+        private static final long serialVersionUID = 1L;
 
         private StringEnumConfigurer typeConfig;
         private StringEnumConfigurer sideConfig;
@@ -235,6 +239,7 @@ public class PieceProcessor extends JPanel {
     }
 
     class pieceDisplay extends JPanel {
+        private static final long serialVersionUID = 1L;
 
         textDataDisplay t;
 

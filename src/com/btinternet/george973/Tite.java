@@ -1232,11 +1232,12 @@ public class Tite extends AbstractConfigurable
   }
 
   abstract class Widget extends JPanel {
+    private static final long serialVersionUID = 1L;
 
-  IconButton nextButton;
-  IconButton prevButton;
+    IconButton nextButton;
+    IconButton prevButton;
   
-  protected final int BUTTON_SIZE = 22;
+    protected final int BUTTON_SIZE = 22;
 
     protected JLabel label = new JLabel();
     int index;
@@ -1330,6 +1331,7 @@ public class Tite extends AbstractConfigurable
   }
 
   class TurnWidget extends Widget {
+    private static final long serialVersionUID = 1L;
 
     public TurnWidget() {
       super(0);
@@ -1365,6 +1367,7 @@ public class Tite extends AbstractConfigurable
   }
 
   class RailWidget extends Widget {
+    private static final long serialVersionUID = 1L;
 
     String type;
     int value;
@@ -1421,6 +1424,7 @@ public class Tite extends AbstractConfigurable
   }
 
   class VPWidget extends Widget {
+    private static final long serialVersionUID = 1L;
 
     public VPWidget() {
       super(1);
@@ -1589,7 +1593,7 @@ public class Tite extends AbstractConfigurable
   }
 
   public class DuplicateTite extends Throwable {
-  
+     private static final long serialVersionUID = 1L; 
   }
   
   protected JToolBar toolbar;
