@@ -166,7 +166,7 @@ public class ScheduleReader extends SetupReader {
     void placeDakDivision(String[] divName, String[] words) {
         if (divName.length > 3
                 && divName[divName.length -2].equalsIgnoreCase("inf")) {
-            divName = this.remove(divName, divName.length - 2);
+            divName = remove(divName, divName.length - 2);
         }
         for (;;) {
             if (words.length == 0) break;
