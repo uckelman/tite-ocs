@@ -94,8 +94,8 @@ public class DragHandlerReplace extends AbstractConfigurable {
         return null;
     }
 
-    public Class[] getAllowableConfigureComponents() {
-        return new Class[0];
+    public Class<?>[] getAllowableConfigureComponents() {
+        return new Class<?>[0];
     }
 
     /**
