@@ -305,7 +305,7 @@ public class DragHandlerReplace extends AbstractConfigurable {
                 if (isFlight) {
                     Point p = new Point(lastDragLocation);
                     SwingUtilities.convertPointFromScreen(p, baseMap.getView());
-                    updateRange(baseMap.mapCoordinates(p));
+                    updateRange(baseMap.componentToMap(p));
                 }
                 moveDragCursor(e.getX(), e.getY());
                 if (dragCursor != null && !dragCursor.isVisible()) {

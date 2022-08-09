@@ -172,7 +172,7 @@ public class MapOverride extends Map {
             mi.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    Point p = mapCoordinates(activeViewport.getRealViewPosition());
+                    Point p = componentToMap(activeViewport.getRealViewPosition());
                     Dimension d = mapSize();
                     aRestrict b = new aRestrict("new",
                             new Rectangle(p.x, p.y, d.width - p.x, d.height - p.y),
@@ -188,7 +188,7 @@ public class MapOverride extends Map {
             mi.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    Point p = mapCoordinates(activeViewport.getRealViewPosition());
+                    Point p = componentToMap(activeViewport.getRealViewPosition());
                     Dimension d = activeViewport.getExtentSize();
                     d.width /= getZoom();
                     d.height /= getZoom();
@@ -289,7 +289,7 @@ public class MapOverride extends Map {
     @Override
     public void mouseReleased(MouseEvent e) {
         if (e.isShiftDown() && activeRestrict == allRestricts.get(0)) {
-            Point p = mapCoordinates(e.getPoint());
+            Point p = componentToMap(e.getPoint());
             String loc = myLocationName(new Point(p));
             aRestrict a = new aRestrict(loc, activeRestrict.here, defaultZoom, new Point(0, 0));
             allRestricts.add(a);
@@ -359,7 +359,7 @@ public class MapOverride extends Map {
     @Override
     public void centerAt(Point p, int dx, int dy) {
         if (scroll != null) {
-            p = componentCoordinates(p);
+            p = mapToComponent(p);
 
             final Rectangle r = theMap.getVisibleRect();
             r.x = p.x - r.width / 2;
