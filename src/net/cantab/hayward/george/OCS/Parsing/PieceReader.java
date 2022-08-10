@@ -1129,7 +1129,7 @@ public abstract class PieceReader {
     }
 
     void processIds(String factors, String[] words, String[] type, String[] div) {
-        Class hqType = null;
+        Class<?> hqType = null;
         if (type.length > 0 && type[type.length - 1].equals("HQ")) {
             hqType = HeadQuarters.class;
             factors = null;

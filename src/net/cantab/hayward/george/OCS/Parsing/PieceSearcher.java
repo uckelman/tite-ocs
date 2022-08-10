@@ -256,19 +256,19 @@ public class PieceSearcher {
         return findPiece(-1, null, null, null, new String[]{name}, null, null);
     }
 
-    OcsCounter findMarker(Class ocsType) {
+    OcsCounter findMarker(Class<?> ocsType) {
         return findPiece(-1, ocsType, null, null, null, null, null);
     }
 
-    OcsCounter findMarker(String name, Class ocsType) {
+    OcsCounter findMarker(String name, Class<?> ocsType) {
         return findPiece(-1, ocsType, null, null, new String[]{name}, null, null);
     }
 
-    OcsCounter findPiece(int curSide, Class ocsType, String[] ids) {
+    OcsCounter findPiece(int curSide, Class<?> ocsType, String[] ids) {
         return findPiece(curSide, ocsType, null, null, ids, null, null);
     }
 
-    OcsCounter findPiece(int curSide, Class ocsType1, Class ocsType2, String[] ids) {
+    OcsCounter findPiece(int curSide, Class<?> ocsType1, Class<?> ocsType2, String[] ids) {
         return findPiece(curSide, ocsType1, ocsType2, null, ids, null, null);
     }
 
@@ -292,7 +292,7 @@ public class PieceSearcher {
         return findPiece(curSide, null, null, factors, ids, null, type);
     }
 
-    OcsCounter findPiece(int curSide, Class ocsType1, Class ocsType2,
+    OcsCounter findPiece(int curSide, Class<?> ocsType1, Class<?> ocsType2,
                          String factors, String[] ids, String[] div, String[] type) {
         String id = null;
         String dName = null;
