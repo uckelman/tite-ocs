@@ -58,8 +58,7 @@ public class ScenarioBuilder extends Launcher {
     protected void launch()
             throws IOException {
         new IconFactory(); // initialsie the icon factory
-        final ArchiveWriter archive = new ArchiveWriter(new ZipFile(
-                lr.module.getPath()));
+        final ArchiveWriter archive = new ArchiveWriter(lr.module.getPath());
         GameModule.init(new GameModule(archive));
         Command c = GameModule.getGameModule().getGameState().decodeSavedGame(
                 load);
