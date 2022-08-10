@@ -60,7 +60,7 @@ public class ScenarioBuilder extends Launcher {
         new IconFactory(); // initialsie the icon factory
         final ArchiveWriter archive = new ArchiveWriter(new ZipFile(
                 lr.module.getPath()));
-        GameModule.init(new BasicModule(archive));
+        GameModule.init(new GameModule(archive));
         Command c = GameModule.getGameModule().getGameState().decodeSavedGame(
                 load);
         c.execute();
