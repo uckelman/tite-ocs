@@ -993,7 +993,7 @@ public class MapOverride extends Map {
         theMap.setDropTarget(PieceMover.AbstractDragHandler.makeDropTarget(
                 theMap, DnDConstants.ACTION_MOVE, this));
         GameModule.getGameModule().getGameState().addGameComponent(this);
-        GameModule.getGameModule().getToolBar().add(launchButton);
+        GameModule.getGameModule().getToolBar().add(launch);
         if (shouldDockIntoMainWindow()) {
             final IntConfigurer config =
                     new IntConfigurer(MAIN_WINDOW_HEIGHT, null, -1);
