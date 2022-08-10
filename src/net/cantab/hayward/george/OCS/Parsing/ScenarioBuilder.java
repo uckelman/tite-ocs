@@ -23,6 +23,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import net.cantab.hayward.george.OCS.Statics;
 
+import org.apache.commons.lang3.SystemUtils;
+
 /**
  *
  * @author george
@@ -50,7 +52,7 @@ public class ScenarioBuilder extends Launcher {
     }
 
     protected MenuManager createMenuManager() {
-        return Info.isMacOSX() ? new MacOSXMenuManager() : new MyMenuManager();
+        return SystemUtils.IS_OS_MAC ? new MacOSXMenuManager() : new MyMenuManager();
     }
 
     protected void launch()
