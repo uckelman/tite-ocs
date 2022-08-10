@@ -1622,7 +1622,7 @@ public class Tite extends AbstractConfigurable
     
     initialiseNations();
     
-    window = new JDialog(GameModule.getGameModule().getFrame());
+    window = new JDialog(GameModule.getGameModule().getPlayerWindow());
 
     window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     window.setTitle("Reinforcements");
@@ -1634,7 +1634,7 @@ public class Tite extends AbstractConfigurable
       }
     });
 
-    conditionalWindow = new JDialog(GameModule.getGameModule().getFrame());
+    conditionalWindow = new JDialog(GameModule.getGameModule().getPlayerWindow());
 
     conditionalWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     conditionalWindow.setTitle("Reinforcements");

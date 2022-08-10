@@ -655,7 +655,7 @@ public class Statics extends AbstractConfigurable
             });
             piecesLaunch.setFocusable(false);
             toolbar.add(piecesLaunch);
-            piecesWindow = new JDialog(GameModule.getGameModule().getFrame());
+            piecesWindow = new JDialog(GameModule.getGameModule().getPlayerWindow());
             piecesWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             piecesWindow.setTitle("Piece definitions");
             piecesWindow.setSize(700, 500);
